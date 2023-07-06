@@ -1,118 +1,115 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+/* Bible reading page */
 
-const inter = Inter({ subsets: ['latin'] })
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import MenuBar from "@/components/MenuBar";
+import { Page } from "@/utils/types";
 
 export default function Home() {
+  const router = useRouter();
+  const book = useRef<string>(router.query?.book as string);
+  const chapter = useRef<number>(router.query?.chapter as unknown as number);
+
+  const [text, setText] = useState<string>("");
+
+  useEffect(() => {
+    if (router.isReady && book.current && chapter.current) {
+      setText(getText(book.current, chapter.current));
+    } else if (router.isReady && (!book.current || !chapter.current)) {
+      router.push("/");
+    }
+  }, [router, book, chapter]);
+
+  useEffect(() => {
+    if (!book.current && !chapter.current) {
+      // if the book and chapter are not defined in the url, check to see if any previous browsing was saved in localStorage
+      const storedBook = localStorage.getItem("book") as string;
+      const storedChapter = localStorage.getItem(
+        "chapter"
+      ) as unknown as number;
+      // if nothing was stored, go to Genesis 1
+      book.current = storedBook || "Genesis";
+      chapter.current = storedChapter || 1;
+      setText(getText(book.current, chapter.current));
+    }
+
+    // set localStorage to the current viewing book and chapter so that the next load will use the same chapter
+    localStorage.setItem("book", book.current);
+    localStorage.setItem("chapter", `${chapter.current}`);
+  }, [setText, book, chapter]);
+
+  const getText = (book: string, chapter: number = 1) => {
+    // TODO: connect to backend
+    return `The Creation of the World 1 In the beginning, God created the heavens and
+    the earth. 2 The earth was without form and void, and darkness was over
+    the face of the deep. And the Spirit of God was hovering over the face of
+    the waters. 3 And God said, “Let there be light,” and there was light. 4
+    And God saw that the light was good. And God separated the light from the
+    darkness. 5 God called the light Day, and the darkness he called Night.
+    And there was evening and there was morning, the first day. 6 And God
+    said, “Let there be an expanse[a] in the midst of the waters, and let it
+    separate the waters from the waters.” 7 And God made[b] the expanse and
+    separated the waters that were under the expanse from the waters that were
+    above the expanse. And it was so. 8 And God called the expanse Heaven.[c]
+    And there was evening and there was morning, the second day. 9 And God
+    said, “Let the waters under the heavens be gathered together into one
+    place, and let the dry land appear.” And it was so. 10 God called the dry
+    land Earth,[d] and the waters that were gathered together he called Seas.
+    And God saw that it was good. 11 And God said, “Let the earth sprout
+    vegetation, plants[e] yielding seed, and fruit trees bearing fruit in
+    which is their seed, each according to its kind, on the earth.” And it was
+    so. 12 The earth brought forth vegetation, plants yielding seed according
+    to their own kinds, and trees bearing fruit in which is their seed, each
+    according to its kind. And God saw that it was good. 13 And there was
+    evening and there was morning, the third day. 14 And God said, “Let there
+    be lights in the expanse of the heavens to separate the day from the
+    night. And let them be for signs and for seasons,[f] and for days and
+    years, 15 and let them be lights in the expanse of the heavens to give
+    light upon the earth.” And it was so. 16 And God made the two great
+    lights—the greater light to rule the day and the lesser light to rule the
+    night—and the stars. 17 And God set them in the expanse of the heavens to
+    give light on the earth, 18 to rule over the day and over the night, and
+    to separate the light from the darkness. And God saw that it was good. 19
+    And there was evening and there was morning, the fourth day. 20 And God
+    said, “Let the waters swarm with swarms of living creatures, and let
+    birds[g] fly above the earth across the expanse of the heavens.” 21 So God
+    created the great sea creatures and every living creature that moves, with
+    which the waters swarm, according to their kinds, and every winged bird
+    according to its kind. And God saw that it was good. 22 And God blessed
+    them, saying, “Be fruitful and multiply and fill the waters in the seas,
+    and let birds multiply on the earth.” 23 And there was evening and there
+    was morning, the fifth day. 24 And God said, “Let the earth bring forth
+    living creatures according to their kinds—livestock and creeping things
+    and beasts of the earth according to their kinds.” And it was so. 25 And
+    God made the beasts of the earth according to their kinds and the
+    livestock according to their kinds, and everything that creeps on the
+    ground according to its kind. And God saw that it was good. 26 Then God
+    said, “Let us make man[h] in our image, after our likeness. And let them
+    have dominion over the fish of the sea and over the birds of the heavens
+    and over the livestock and over all the earth and over every creeping
+    thing that creeps on the earth.” 27 So God created man in his own image,
+    in the image of God he created him; male and female he created them. 28
+    And God blessed them. And God said to them, “Be fruitful and multiply and
+    fill the earth and subdue it, and have dominion over the fish of the sea
+    and over the birds of the heavens and over every living thing that moves
+    on the earth.” 29 And God said, “Behold, I have given you every plant
+    yielding seed that is on the face of all the earth, and every tree with
+    seed in its fruit. You shall have them for food. 30 And to every beast of
+    the earth and to every bird of the heavens and to everything that creeps
+    on the earth, everything that has the breath of life, I have given every
+    green plant for food.” And it was so. 31 And God saw everything that he
+    had made, and behold, it was very good. And there was evening and there
+    was morning, the sixth day.`;
+  };
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div>
+      <div className="p-4 pb-20">
+        <div className="text-xl font-bold my-4">
+          {book.current} {chapter.current}
         </div>
+        <div>{text}</div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      <MenuBar currentPage={Page.HOME} />
+    </div>
+  );
 }
