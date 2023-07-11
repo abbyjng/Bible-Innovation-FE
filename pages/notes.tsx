@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
+import MenuBarTop from "@/components/MenuBarTop";
 import { Page } from "@/utils/types";
 import { Editor } from "@tinymce/tinymce-react";
 
@@ -16,12 +17,9 @@ export default function Notes() {
 
   return (
     <div className="">
+      <MenuBarTop currentPage={Page.NOTES} />
       <div className="p-2 pb-20">
-        <header>
-          <div className="text-2xl font-bold text-right mr-4">Menu</div>
-        </header>
-
-        <body>
+        <body className="mt-20">
           <div className="bg-gray-300 ml-4 inline-block w-40">
             <a href="#" className="text-center">
               <p className="pt-2.5 pb-2.5">Folder</p>
@@ -74,8 +72,6 @@ export default function Notes() {
           </div>
         </body>
       </div>
-
-      <MenuBar currentPage={Page.NOTES} />
     </div>
   );
 }
