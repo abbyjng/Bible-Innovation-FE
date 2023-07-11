@@ -71,6 +71,66 @@ export default function Home() {
               text: `And God saw that the light was good. And God separated the light from the
               darkness.`,
             },
+            {
+              number: 5,
+              text: `God called the light “day,” and the darkness he called “night.” And there was evening, and there was morning—the first day.`,
+            },
+            {
+              number: 6,
+              text: `And God said, “Let there be a vault between the waters to separate water from water.”`,
+            },
+            {
+              number: 7,
+              text: `So God made the vault and separated the water under the vault from the water above it. And it was so.`,
+            },
+            {
+              number: 8,
+              text: `God called the vault “sky.” And there was evening, and there was morning—the second day.`,
+            },
+            {
+              number: 9,
+              text: `And God said, “Let the water under the sky be gathered to one place, and let dry ground appear.” And it was so.`,
+            },
+            {
+              number: 10,
+              text: `God called the dry ground “land,” and the gathered waters he called “seas.” And God saw that it was good.`,
+            },
+            {
+              number: 11,
+              text: `Then God said, “Let the land produce vegetation: seed-bearing plants and trees on the land that bear fruit with seed in it, according to their various kinds.” And it was so.`,
+            },
+            {
+              number: 12,
+              text: `The land produced vegetation: plants bearing seed according to their kinds and trees bearing fruit with seed in it according to their kinds. And God saw that it was good.`,
+            },
+            {
+              number: 13,
+              text: `And there was evening, and there was morning—the third day.`,
+            },
+            {
+              number: 14,
+              text: `And God said, “Let there be lights in the vault of the sky to separate the day from the night, and let them serve as signs to mark sacred times, and days and years,`,
+            },
+            {
+              number: 15,
+              text: `and let them be lights in the vault of the sky to give light on the earth.” And it was so.`,
+            },
+            {
+              number: 16,
+              text: `God made two great lights—the greater light to govern the day and the lesser light to govern the night. He also made the stars.`,
+            },
+            {
+              number: 17,
+              text: `God set them in the vault of the sky to give light on the earth,`,
+            },
+            {
+              number: 18,
+              text: `to govern the day and the night, and to separate light from darkness. And God saw that it was good.`,
+            },
+            {
+              number: 19,
+              text: `And there was evening, and there was morning—the fourth day.`,
+            },
           ],
         },
       ],
