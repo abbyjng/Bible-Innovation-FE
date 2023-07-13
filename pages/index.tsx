@@ -7,6 +7,7 @@ import { ChapterType, Page, VerseType } from "@/utils/types";
 import Verse from "@/components/Verse";
 import NoteEditor from "@/components/NoteEditor";
 import { classNames } from "@/utils/helper";
+import { getText } from "@/utils/orchestration";
 
 export default function Home() {
   const router = useRouter();
@@ -19,7 +20,11 @@ export default function Home() {
   useEffect(() => {
     if (router.isReady && book.current && chapter.current) {
       getText(book.current, chapter.current).then((text) => {
-        setText(text);
+        if (!text) {
+          router.push("500");
+        } else {
+          setText(text);
+        }
       });
     } else if (router.isReady && (!book.current || !chapter.current)) {
       router.push("/");
@@ -29,13 +34,18 @@ export default function Home() {
   useEffect(() => {
     if (
       router.isReady &&
-      (book.current !== router.query?.book ||
-        chapter.current !== (router.query?.chapter as unknown as number))
+      ((book.current !== router.query?.book && router.query?.book) ||
+        (chapter.current !== (router.query?.chapter as unknown as number) &&
+          router.query?.chapter))
     ) {
       book.current = router.query?.book as string;
       chapter.current = router.query?.chapter as unknown as number;
       getText(book.current, chapter.current).then((text) => {
-        setText(text);
+        if (!text) {
+          router.push("500");
+        } else {
+          setText(text);
+        }
       });
     }
   });
@@ -51,28 +61,19 @@ export default function Home() {
       book.current = storedBook || "Genesis";
       chapter.current = storedChapter || 1;
       getText(book.current, chapter.current).then((text) => {
-        setText(text);
+        if (!text) {
+          router.push("500");
+        } else {
+          setText(text);
+        }
       });
     }
 
     // set localStorage to the current viewing book and chapter so that the next load will use the same chapter
     localStorage.setItem("book", book.current);
     localStorage.setItem("chapter", `${chapter.current}`);
-  }, [setText, book, chapter]);
+  }, [setText, book, chapter, router]);
 
-  const getText = async (
-    book: string,
-    chapter: number = 1
-  ): Promise<ChapterType> => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/bible/?book=${book}&chapter=${chapter}`,
-      {
-        method: "GET",
-      }
-    );
-    const result = await response.json();
-    return result;
-  };
   return (
     <div>
       <div className="p-4 pb-20">

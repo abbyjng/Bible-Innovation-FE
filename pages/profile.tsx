@@ -4,7 +4,7 @@ import { useState } from "react";
 import MenuBarTop from "@/components/MenuBarTop";
 import { Page } from "@/utils/types";
 
-export default function Notes() {
+export default function Profile() {
   const [name, setName] = useState<any[]>([]); // TODO: figure out typing
 
   const getUser = () => {
