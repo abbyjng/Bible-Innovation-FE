@@ -6,13 +6,11 @@ export const Page = {
 };
 
 export interface ChapterType {
-  book: string;
+  bookname: string;
   chapter: number;
-  title: string;
-  sections: { title: string; verses: VerseType[] }[];
+  verses: VerseType[];
 }
 
 export interface VerseType {
-  number: number;
-  text: string;
+  [key: string]: string;
 }
