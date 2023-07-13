@@ -2,7 +2,7 @@ import { ChapterType } from "./types";
 
 export const getText = async (
   book: string,
-  chapter: number = 1
+  chapter: number
 ): Promise<ChapterType | undefined> => {
   try {
     const response = await fetch(

@@ -11,74 +11,73 @@ import { getText } from "@/utils/orchestration";
 
 export default function Home() {
   const router = useRouter();
-  const book = useRef<string>(router.query?.book as string);
-  const chapter = useRef<number>(router.query?.chapter as unknown as number);
+  const book = useRef<string>();
+  const chapter = useRef<number>();
 
   const [text, setText] = useState<ChapterType>();
   const [selectedVerse, setSelectedVerse] = useState<VerseType>();
 
-  useEffect(() => {
-    if (router.isReady && book.current && chapter.current) {
-      getText(book.current, chapter.current).then((text) => {
-        if (!text) {
-          router.push("500");
-        } else {
-          setText(text);
-        }
-      });
-    } else if (router.isReady && (!book.current || !chapter.current)) {
-      router.push("/");
+  const checkLocalStorage = () => {
+    const storedBook = localStorage.getItem("book") as string;
+    const storedChapter = localStorage.getItem("chapter");
+
+    // if the stored book and chapter are the same as what's displayed, change nothing
+    if (
+      storedBook === book.current &&
+      (storedChapter as unknown as number) === chapter.current
+    ) {
+      return;
     }
-  }, [router, book, chapter]);
+
+    // if nothing was stored, go to Genesis 1
+    book.current = storedBook || "Genesis";
+    chapter.current =
+      storedChapter !== "undefined" ? (storedChapter as unknown as number) : 1;
+    setNewText(book.current, chapter.current);
+  };
+
+  const setNewText = (book: string, chapter: number) => {
+    console.log(book, chapter);
+    getText(book, chapter).then((text) => {
+      if (!text) {
+        router.push("500");
+      } else if ("error" in text) {
+        router.push("/");
+      } else {
+        setText(text);
+
+        // set localStorage to the current viewing book and chapter so that the next load will use the same chapter
+        localStorage.setItem("book", book);
+        localStorage.setItem("chapter", `${chapter}`);
+      }
+    });
+  };
 
   useEffect(() => {
+    if (!router.isReady) return;
+    console.log("loaded1");
+
+    // when the page loads, check for url book and chapter, and use those if available
     if (
-      router.isReady &&
-      ((book.current !== router.query?.book && router.query?.book) ||
-        (chapter.current !== (router.query?.chapter as unknown as number) &&
-          router.query?.chapter))
+      router.query?.book &&
+      (router.query?.book as string) !== book.current &&
+      router.query?.chapter &&
+      (router.query?.chapter as unknown as number) !== chapter.current
     ) {
       book.current = router.query?.book as string;
       chapter.current = router.query?.chapter as unknown as number;
-      getText(book.current, chapter.current).then((text) => {
-        if (!text) {
-          router.push("500");
-        } else {
-          setText(text);
-        }
-      });
+      setNewText(book.current, chapter.current);
+    } else if (!router.query?.book || !router.query?.chapter) {
+      // if the book or chapter is not defined in the url, check if there is a stored chapter
+      checkLocalStorage();
     }
   });
-
-  useEffect(() => {
-    if (!book.current && !chapter.current) {
-      // if the book and chapter are not defined in the url, check to see if any previous browsing was saved in localStorage
-      const storedBook = localStorage.getItem("book") as string;
-      const storedChapter = localStorage.getItem(
-        "chapter"
-      ) as unknown as number;
-      // if nothing was stored, go to Genesis 1
-      book.current = storedBook || "Genesis";
-      chapter.current = storedChapter || 1;
-      getText(book.current, chapter.current).then((text) => {
-        if (!text) {
-          router.push("500");
-        } else {
-          setText(text);
-        }
-      });
-    }
-
-    // set localStorage to the current viewing book and chapter so that the next load will use the same chapter
-    localStorage.setItem("book", book.current);
-    localStorage.setItem("chapter", `${chapter.current}`);
-  }, [setText, book, chapter, router]);
 
   return (
     <div>
       <div className="p-4 pb-20">
         <div className="text-xl font-bold my-4">
-          {book.current} {chapter.current}
+          {text?.bookname} {text?.chapter}
         </div>
         <div>
           {text?.verses.map((verse) => {
