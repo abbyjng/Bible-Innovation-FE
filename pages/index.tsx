@@ -6,7 +6,7 @@ import MenuBar from "@/components/MenuBar";
 import { ChapterType, Page, VerseType } from "@/utils/types";
 import Verse from "@/components/Verse";
 import NoteEditor from "@/components/NoteEditor";
-import { classNames } from "@/utils/helper";
+import { classNames, getNumber } from "@/utils/helper";
 import { getText } from "@/utils/orchestration";
 
 export default function Home() {
@@ -19,25 +19,23 @@ export default function Home() {
 
   const checkLocalStorage = () => {
     const storedBook = localStorage.getItem("book") as string;
-    const storedChapter = localStorage.getItem("chapter");
+    const storedChapter = getNumber(localStorage.getItem("chapter"));
 
     // if the stored book and chapter are the same as what's displayed, change nothing
     if (
       storedBook === book.current &&
-      (storedChapter as unknown as number) === chapter.current
+      getNumber(storedChapter) === chapter.current
     ) {
       return;
     }
 
     // if nothing was stored, go to Genesis 1
     book.current = storedBook || "Genesis";
-    chapter.current =
-      storedChapter !== "undefined" ? (storedChapter as unknown as number) : 1;
+    chapter.current = storedChapter || 1;
     setNewText(book.current, chapter.current);
   };
 
   const setNewText = (book: string, chapter: number) => {
-    console.log(book, chapter);
     getText(book, chapter).then((text) => {
       if (!text) {
         router.push("500");
@@ -55,7 +53,6 @@ export default function Home() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    console.log("loaded1");
 
     // when the page loads, check for url book and chapter, and use those if available
     if (
