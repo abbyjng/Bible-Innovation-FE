@@ -1,6 +1,6 @@
 /* 500 internal server error page */
 
-import MenuBarTop from "@/components/MenuBarTop";
+import MenuBarTop from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 
 export default function ServerError() {

@@ -1,5 +1,6 @@
 /* Login */
 
+import { signIn } from "@/utils/orchestration";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -10,8 +11,11 @@ export default function Signin() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    const result = await signIn(email, password);
+    console.log(result);
 
     // TODO: handle login
 

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
-import MenuBarTop from "@/components/MenuBarTop";
+import MenuBarTop from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 import { Editor } from "@tinymce/tinymce-react";
 

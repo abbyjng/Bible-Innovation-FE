@@ -8,6 +8,7 @@ import Verse from "@/components/Verse";
 import NoteEditor from "@/components/NoteEditor";
 import { classNames, getNumber } from "@/utils/helper";
 import { getText } from "@/utils/orchestration";
+import MenuBarTop from "@/components/MenuBar";
 
 export default function Home() {
   const router = useRouter();
@@ -57,9 +58,9 @@ export default function Home() {
     // when the page loads, check for url book and chapter, and use those if available
     if (
       router.query?.book &&
-      (router.query?.book as string) !== book.current &&
       router.query?.chapter &&
-      (router.query?.chapter as unknown as number) !== chapter.current
+      ((router.query?.chapter as unknown as number) !== chapter.current ||
+        (router.query?.book as string) !== book.current)
     ) {
       book.current = router.query?.book as string;
       chapter.current = router.query?.chapter as unknown as number;
@@ -102,7 +103,17 @@ export default function Home() {
           />
         </div>
       )}
-      <MenuBar currentPage={Page.HOME} />
+      <MenuBarTop
+        currentPage={Page.HOME}
+        hasBibleSelector
+        selectedChapter={`${book.current} ${chapter.current}`}
+        setSelectedChapter={(value) => {
+          const [newBook, newChapter] = value.split(" ");
+          router.push(`/?book=${newBook}&chapter=${newChapter}`);
+        }}
+        selectedVersion={"NEV"}
+        setSelectedVersion={(value) => {}}
+      />
     </div>
   );
 }

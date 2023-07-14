@@ -1,7 +1,7 @@
 /* Friends / following notes viewing page */
 
 import { useState } from "react";
-import MenuBarTop from "@/components/MenuBarTop";
+import MenuBarTop from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 
 export default function Feed() {
