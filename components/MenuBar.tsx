@@ -35,6 +35,8 @@ const MenuBar: React.FC<Props> = ({
         return "Feed";
       case Page.PROFILE:
         return "Profile";
+      default:
+        return "Page";
     }
   };
 

@@ -1,7 +1,7 @@
 /* Friends / following notes viewing page */
 
 import { useState } from "react";
-import MenuBarTop from "@/components/MenuBar";
+import MenuBar from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 
 export default function Feed() {
@@ -13,7 +13,7 @@ export default function Feed() {
   };
   return (
     <div className="">
-      <MenuBarTop currentPage={Page.FEED} />
+      <MenuBar currentPage={Page.FEED} />
       <div className="p-2 pb-20"></div>
     </div>
   );

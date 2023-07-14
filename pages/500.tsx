@@ -1,12 +1,8 @@
 /* 500 internal server error page */
 
-import MenuBarTop from "@/components/MenuBar";
-import { Page } from "@/utils/types";
-
 export default function ServerError() {
   return (
     <div>
-      <MenuBarTop currentPage={Page.FEED} />
       <div className="p-2 pb-20 flex flex-col h-screen justify-center">
         <div>500</div>
         <div>

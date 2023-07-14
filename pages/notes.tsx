@@ -1,9 +1,7 @@
 /* Personal notes viewing and editing page */
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
-import MenuBarTop from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 import { Editor } from "@tinymce/tinymce-react";
 
@@ -17,7 +15,7 @@ export default function Notes() {
 
   return (
     <div className="">
-      <MenuBarTop currentPage={Page.NOTES} />
+      <MenuBar currentPage={Page.NOTES} />
       <div className="p-2 pb-20">
         <body className="mt-20">
           <div className="bg-gray-300 ml-4 inline-block w-40">

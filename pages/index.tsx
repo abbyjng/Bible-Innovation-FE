@@ -8,7 +8,6 @@ import Verse from "@/components/Verse";
 import NoteEditor from "@/components/NoteEditor";
 import { classNames, getNumber } from "@/utils/helper";
 import { getText } from "@/utils/orchestration";
-import MenuBarTop from "@/components/MenuBar";
 
 export default function Home() {
   const router = useRouter();
@@ -103,7 +102,7 @@ export default function Home() {
           />
         </div>
       )}
-      <MenuBarTop
+      <MenuBar
         currentPage={Page.HOME}
         hasBibleSelector
         selectedChapter={`${book.current} ${chapter.current}`}

@@ -1,7 +1,7 @@
 /* Profile page */
 
 import { useState } from "react";
-import MenuBarTop from "@/components/MenuBar";
+import MenuBar from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 
 export default function Profile() {
@@ -14,7 +14,7 @@ export default function Profile() {
 
   return (
     <div className="">
-      <MenuBarTop currentPage={Page.PROFILE} />
+      <MenuBar currentPage={Page.PROFILE} />
       <div className="p-2 pb-20">{name}</div>
     </div>
   );
