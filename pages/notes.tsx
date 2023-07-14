@@ -17,20 +17,20 @@ export default function Notes() {
     <div className="">
       <MenuBar currentPage={Page.NOTES} />
       <div className="p-2 pb-20">
-        <body className="mt-20">
-          <div className="bg-gray-300 ml-4 inline-block w-40">
+        <body className="mt-7">
+          <div className="bg-gray-300 ml-4 inline-block w-20">
             <a href="#" className="text-center">
               <p className="pt-2.5 pb-2.5">Folder</p>
             </a>
           </div>
 
-          <div className="bg-gray-300 ml-4 inline-block w-40">
+          <div className="bg-gray-300 ml-4 inline-block w-20">
             <a href="#" className="text-center">
               <p className="pt-2.5 pb-2.5">Folder</p>
             </a>
           </div>
 
-          <div className="bg-gray-300 ml-4 inline-block w-40">
+          <div className="bg-gray-300 ml-4 inline-block w-20">
             <a href="#" className="text-center">
               <p className="pt-2.5 pb-2.5">Folder</p>
             </a>
