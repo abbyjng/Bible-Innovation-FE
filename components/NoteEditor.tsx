@@ -24,16 +24,16 @@ const NoteEditor: React.FC<Props> = ({ verse, content, onSave }) => {
   const fs = require('fs')
 
   //Two errors here, looking it up shows that it can be fixed by adding ' "noImplicitAny": false ' to tsconfig.json
-  const saveData = (noteData) => {
-    const finished = (Error) => {
-      if (Error) {
-        console.error(Error)
-        return;
-      }
-    }
-    const jsonData = JSON.stringify(noteData, null, 2)
-    fs.writeFile('notes.json', jsonData, finished) //the .json filename is a placeholder
-  }
+  // const saveData = (noteData) => {
+  //   const finished = (Error) => {
+  //     if (Error) {
+  //       console.error(Error)
+  //       return;
+  //     }
+  //   }
+  //   const jsonData = JSON.stringify(noteData, null, 2)
+  //   fs.writeFile('notes.json', jsonData, finished) //the .json filename is a placeholder
+  // }
 
   return (
     <div className="w-screen h-screen flex flex-col justify-end bg-black/80 p-4 gap-4">
