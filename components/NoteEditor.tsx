@@ -1,39 +1,38 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
-import { Page, VerseType } from "../utils/types";
+import { NoteDataType, Page, VerseType } from "../utils/types";
 import { classNames } from "@/utils/helper";
 import { Editor } from "@tinymce/tinymce-react";
 import Verse from "./Verse";
 
 interface Props {
+  book: string;
+  chapter: number;
   verse: VerseType;
   content: string;
-  onSave: (content: string) => void;
+  onSave: (content: NoteDataType) => void;
 }
 
-const NoteEditor: React.FC<Props> = ({ verse, content, onSave }) => {
+const NoteEditor: React.FC<Props> = ({
+  book,
+  chapter,
+  verse,
+  content,
+  onSave,
+}) => {
   const editorRef = useRef<any>();
 
-  const noteData = {
-    book: 'Genesis', //placeholder, should grab from api itself
-    chapter: 1, //placeholder, should grab from api itself
-    verse: 1, //placeholder, should grab from api itself
-    note: 'placeholder'
+  const saveData = (content: string) => {
+    const noteData: NoteDataType = {
+      book: book,
+      chapter: chapter,
+      verse: Object.keys(verse)[0] as unknown as number,
+      note: content,
+    };
+    const jsonData = JSON.stringify(noteData, null, 2);
+    localStorage.setItem("noteSaveData", jsonData);
+    onSave(noteData);
   };
-
-  const fs = require('fs')
-
-  //Two errors here, looking it up shows that it can be fixed by adding ' "noImplicitAny": false ' to tsconfig.json
-  // const saveData = (noteData) => {
-  //   const finished = (Error) => {
-  //     if (Error) {
-  //       console.error(Error)
-  //       return;
-  //     }
-  //   }
-  //   const jsonData = JSON.stringify(noteData, null, 2)
-  //   fs.writeFile('notes.json', jsonData, finished) //the .json filename is a placeholder
-  // }
 
   return (
     <div className="w-screen h-screen flex flex-col justify-end bg-black/80 p-4 gap-4">
@@ -62,7 +61,7 @@ const NoteEditor: React.FC<Props> = ({ verse, content, onSave }) => {
       />
       <div
         className="w-full bg-gray-200 text-center rounded p-4 text-lg mb-4 cursor-pointer"
-        onClick={() => onSave(editorRef.current.getContent())}
+        onClick={() => saveData(editorRef.current.getContent())}
       >
         Save
       </div>

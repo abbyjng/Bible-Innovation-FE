@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
-import { ChapterType, Page, VerseType } from "@/utils/types";
+import { ChapterType, NoteDataType, Page, VerseType } from "@/utils/types";
 import Verse from "@/components/Verse";
 import NoteEditor from "@/components/NoteEditor";
 import { classNames, getNumber } from "@/utils/helper";
@@ -93,9 +93,11 @@ export default function Home() {
       {selectedVerse && (
         <div className="z-50 fixed bottom-0 w-full">
           <NoteEditor
+            book={book.current || ""}
+            chapter={chapter.current || 0}
             verse={selectedVerse}
             content={""}
-            onSave={(content: string) => {
+            onSave={(noteData: NoteDataType) => {
               setSelectedVerse(undefined);
               // TODO: send content to backend to save note
             }}
@@ -107,7 +109,11 @@ export default function Home() {
         hasBibleSelector
         selectedChapter={`${book.current} ${chapter.current}`}
         setSelectedChapter={(value) => {
-          const [newBook, newChapter] = value.split(" ");
+          const newBook = value.substring(0, value.lastIndexOf(" "));
+          const newChapter = value.substring(
+            value.lastIndexOf(" ") + 1,
+            value.length
+          );
           router.push(`/?book=${newBook}&chapter=${newChapter}`);
         }}
         selectedVersion={"NEV"}

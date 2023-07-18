@@ -14,3 +14,10 @@ export interface ChapterType {
 export interface VerseType {
   [key: string]: string;
 }
+
+export interface NoteDataType {
+  book: string;
+  chapter: number;
+  verse: number;
+  note: string;
+}
