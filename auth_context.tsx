@@ -5,9 +5,10 @@ import Cookies from "js-cookie";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: any;
-  login: (email: string, password: string) => void;
   loading: boolean;
+  user: any;
+  signUp: (displayName: string, email: string, password: string) => void;
+  login: (email: string, password: string) => void;
   logout: () => void;
 }
 
@@ -38,6 +39,35 @@ export const AuthProvider = ({ children }: any) => {
     fetchUserFromCookie();
   }, []);
 
+  const setTokenAndUser = async (token: string) => {
+    Cookies.set("token", token);
+    setStoredToken(token);
+    const user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
+      method: "GET",
+      headers: {
+        user: token,
+      },
+    });
+    if (user && user.status === 200) setUser(await user.json());
+  };
+
+  const signUp = async (
+    displayName: string,
+    email: string,
+    password: string
+  ) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signUp`, {
+      method: "POST",
+      headers: {
+        displayName: displayName,
+        email: email,
+        password: password,
+      },
+    });
+    const token = await response.text();
+    setTokenAndUser(token);
+  };
+
   const login = async (email: string, password: string) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signin`, {
       method: "POST",
@@ -47,18 +77,7 @@ export const AuthProvider = ({ children }: any) => {
       },
     });
     const token = await response.text();
-
-    if (token) {
-      Cookies.set("token", token);
-      setStoredToken(token);
-      const user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
-        method: "GET",
-        headers: {
-          user: token,
-        },
-      });
-      if (user && user.status === 200) setUser(await user.json());
-    }
+    setTokenAndUser(token);
   };
 
   const logout = () => {
@@ -72,9 +91,10 @@ export const AuthProvider = ({ children }: any) => {
     <AuthContext.Provider
       value={{
         isAuthenticated: !!user,
-        user,
-        login,
         loading: isLoading,
+        user,
+        signUp,
+        login,
         logout,
       }}
     >

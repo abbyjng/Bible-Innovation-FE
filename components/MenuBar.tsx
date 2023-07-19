@@ -5,6 +5,10 @@ import { classNames } from "@/utils/helper";
 import Selector from "./Selector";
 import SearchIcon from "./icons/SearchIcon";
 import { BOOKS, CHAPTER_COUNTS } from "../utils/constants";
+import BookIcon from "./icons/BookIcon";
+import CreateNoteIcon from "./icons/CreateNoteIcon";
+import FeedIcon from "./icons/FeedIcon";
+import ProfileIcon from "./icons/ProfileIcon";
 
 interface Props {
   currentPage: Symbol;
@@ -40,17 +44,33 @@ const MenuBar: React.FC<Props> = ({
     }
   };
 
+  const pageAsIcon = (page: Symbol) => {
+    switch (page) {
+      case Page.HOME:
+        return <BookIcon className="fill-black" />;
+      case Page.NOTES:
+        return <CreateNoteIcon className="fill-black" />;
+      case Page.FEED:
+        return <FeedIcon className="fill-black" />;
+      case Page.PROFILE:
+        return <ProfileIcon className="fill-black" />;
+      default:
+        return "Page";
+    }
+  };
+
   return (
     <div>
       {navigationOpen && (
-        <div className="absolute bottom-0 pb-[50px] w-full bg-gray-100 flex flex-col items-center">
+        <div className="absolute bottom-0 pb-[50px] w-full bg-gray-100 flex flex-col items-fill">
           <Link href="/">
             <div
               className={classNames(
                 currentPage === Page.HOME ? "bg-gray-300" : "",
-                "p-2 w-full flex justify-center"
+                "p-2 w-full flex gap-10"
               )}
             >
+              {pageAsIcon(Page.HOME)}
               {pageAsString(Page.HOME)}
             </div>
           </Link>
@@ -58,9 +78,10 @@ const MenuBar: React.FC<Props> = ({
             <div
               className={classNames(
                 currentPage === Page.NOTES ? "bg-gray-300" : "",
-                "p-2 w-full flex justify-center"
+                "p-2 w-full flex gap-10"
               )}
             >
+              {pageAsIcon(Page.NOTES)}
               {pageAsString(Page.NOTES)}
             </div>
           </Link>
@@ -68,9 +89,10 @@ const MenuBar: React.FC<Props> = ({
             <div
               className={classNames(
                 currentPage === Page.FEED ? "bg-gray-300" : "",
-                "p-2 w-full flex justify-center"
+                "p-2 w-full flex gap-10"
               )}
             >
+              {pageAsIcon(Page.FEED)}
               {pageAsString(Page.FEED)}
             </div>
           </Link>
@@ -78,9 +100,10 @@ const MenuBar: React.FC<Props> = ({
             <div
               className={classNames(
                 currentPage === Page.PROFILE ? "bg-gray-300" : "",
-                "p-2 w-full flex justify-center"
+                "p-2 w-full flex gap-10"
               )}
             >
+              {pageAsIcon(Page.PROFILE)}
               {pageAsString(Page.PROFILE)}
             </div>
           </Link>
@@ -122,7 +145,7 @@ const MenuBar: React.FC<Props> = ({
             onClick={() => setNavigationOpen(!navigationOpen)}
             className="cursor-pointer"
           >
-            {pageAsString(currentPage)}
+            {pageAsIcon(currentPage)}
           </div>
         </div>
         {hasBibleSelector && (

@@ -1,5 +1,6 @@
 /* Login */
 
+import { useAuth } from "@/auth_context";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -10,11 +11,19 @@ export default function Signup() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
 
-  const handleSubmit = (e: any) => {
+  const { signUp } = useAuth();
+
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    // TODO: handle create account
+    try {
+      await signUp(name, email, password);
+      router.push("/");
+    } catch (error) {
+      setError(true);
+    }
 
     router.push("/");
   };
@@ -23,7 +32,11 @@ export default function Signup() {
     <div>
       <div className="text-center text-xl font-bold mt-10">Create account</div>
       <form onSubmit={handleSubmit} className="flex flex-col p-4">
-        {/* TODO: add any other necessary fields */}
+        {error && (
+          <div className="text-red-500">
+            Something went wrong. Please try again.
+          </div>
+        )}
         <label htmlFor="name">Name</label>
         <input
           id="name"
