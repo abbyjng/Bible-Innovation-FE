@@ -1,16 +1,31 @@
 /* Friends / following notes viewing page */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MenuBar from "@/components/MenuBar";
 import { Page } from "@/utils/types";
+import { useAuth } from "@/auth_context";
+import Loader from "@/components/Loader";
 
 export default function Feed() {
   const [posts, setPosts] = useState<any[]>([]); // TODO: figure out typing
+  const { loading, isAuthenticated, user, logout } = useAuth();
+
+  useEffect(() => {
+    // checks if the user is authenticated
+    if (!loading && !isAuthenticated) {
+      logout();
+    }
+  }, [isAuthenticated, loading, logout]);
+
+  if (loading || !user) {
+    return <Loader />;
+  }
 
   const getPosts = () => {
     // TODO: connect to backend
     return;
   };
+
   return (
     <div className="">
       <MenuBar currentPage={Page.FEED} />

@@ -113,7 +113,7 @@ const MenuBar: React.FC<Props> = ({
               <Selector
                 selected={selectedVersion}
                 setSelected={setSelectedVersion}
-                options={["NEV"]}
+                options={["NET"]}
               />
             </div>
           )}

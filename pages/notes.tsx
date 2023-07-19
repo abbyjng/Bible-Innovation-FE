@@ -2,11 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import MenuBar from "@/components/MenuBar";
-import { Page } from "@/utils/types";
+import { NoteDataType, Page } from "@/utils/types";
 import { Editor } from "@tinymce/tinymce-react";
+import { useAuth } from "@/auth_context";
+import Loader from "@/components/Loader";
 
 export default function Notes() {
-  const [notes, setNotes] = useState<any[]>([]); // TODO: figure out typing
+  const [notes, setNotes] = useState<NoteDataType[]>([]);
+  const { loading, isAuthenticated, user, logout } = useAuth();
+
+  useEffect(() => {
+    // checks if the user is authenticated
+    if (!loading && !isAuthenticated) {
+      logout();
+    }
+  }, [isAuthenticated, loading, logout]);
+
+  if (loading || !user) {
+    return <Loader />;
+  }
 
   const getNotes = () => {
     // TODO: connect to backend

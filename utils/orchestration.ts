@@ -27,7 +27,8 @@ export const signIn = async (email: string, password: string): Promise<any> => {
         password: password,
       },
     });
-    const result = await response.json();
+    const result = { result: await response.text(), status: response.status };
+
     return result;
   } catch (e) {
     console.log("Error: ", e);

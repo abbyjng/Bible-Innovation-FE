@@ -116,7 +116,7 @@ export default function Home() {
           );
           router.push(`/?book=${newBook}&chapter=${newChapter}`);
         }}
-        selectedVersion={"NEV"}
+        selectedVersion={"NET"}
         setSelectedVersion={(value) => {}}
       />
     </div>
