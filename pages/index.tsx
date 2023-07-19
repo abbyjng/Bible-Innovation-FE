@@ -8,6 +8,7 @@ import Verse from "@/components/Verse";
 import NoteEditor from "@/components/NoteEditor";
 import { classNames, getNumber } from "@/utils/helper";
 import { getText } from "@/utils/orchestration";
+import Loader from "@/components/Loader";
 
 export default function Home() {
   const router = useRouter();
@@ -69,6 +70,10 @@ export default function Home() {
       checkLocalStorage();
     }
   });
+
+  if (!text) {
+    return <Loader />;
+  }
 
   return (
     <div>

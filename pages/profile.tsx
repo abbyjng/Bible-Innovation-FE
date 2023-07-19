@@ -5,7 +5,6 @@ import MenuBar from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 import Link from "next/link";
 import { useAuth } from "@/auth_context";
-import { useRouter } from "next/router";
 import Image from "next/image";
 import DefaultImg from "../assets/default.png";
 import Loader from "@/components/Loader";

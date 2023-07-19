@@ -1,13 +1,19 @@
 /* Sign out page */
 
-import MenuBar from "@/components/MenuBar";
-import { Page } from "@/utils/types";
+import { useAuth } from "@/auth_context";
+import Loader from "@/components/Loader";
+import { useEffect } from "react";
 
 export default function SignOut() {
-  return (
-    <div className="">
-      <MenuBar currentPage={Page.PROFILE} />
-      <div className="p-2 pb-20">TODO</div>
-    </div>
-  );
+  const { loading, isAuthenticated, user, logout } = useAuth();
+
+  useEffect(() => {
+    if (!loading) {
+      logout();
+    }
+  }, [loading, logout]);
+
+  if (loading || !user) {
+    return <Loader />;
+  }
 }
