@@ -6,6 +6,7 @@ import { NoteDataType, Page } from "@/utils/types";
 import { Editor } from "@tinymce/tinymce-react";
 import { useAuth } from "@/auth_context";
 import Loader from "@/components/Loader";
+import PageLayout from "@/components/PageLayout";
 
 export default function Notes() {
   const [notes, setNotes] = useState<NoteDataType[]>([]);
@@ -35,8 +36,7 @@ export default function Notes() {
   };
 
   return (
-    <div className="">
-      <MenuBar currentPage={Page.NOTES} />
+    <PageLayout menuBar={<MenuBar currentPage={Page.NOTES} />}>
       <div className="p-2 pb-20">
         <div className="mt-7">
           <div className="bg-gray-300 ml-4 inline-block w-20">
@@ -91,6 +91,6 @@ export default function Notes() {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

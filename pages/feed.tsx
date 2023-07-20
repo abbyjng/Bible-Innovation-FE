@@ -5,6 +5,7 @@ import MenuBar from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 import { useAuth } from "@/auth_context";
 import Loader from "@/components/Loader";
+import PageLayout from "@/components/PageLayout";
 
 export default function Feed() {
   const [posts, setPosts] = useState<any[]>([]); // TODO: figure out typing
@@ -27,9 +28,8 @@ export default function Feed() {
   };
 
   return (
-    <div className="">
-      <MenuBar currentPage={Page.FEED} />
+    <PageLayout menuBar={<MenuBar currentPage={Page.FEED} />}>
       <div className="p-2 pb-20"></div>
-    </div>
+    </PageLayout>
   );
 }

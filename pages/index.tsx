@@ -9,6 +9,7 @@ import NoteEditor from "@/components/NoteEditor";
 import { classNames, getNumber } from "@/utils/helper";
 import { getText } from "@/utils/orchestration";
 import Loader from "@/components/Loader";
+import PageLayout from "@/components/PageLayout";
 
 export default function Home() {
   const router = useRouter();
@@ -76,14 +77,27 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <div className="h-screen flex flex-col justify-between">
-        <div
-          className={classNames(
-            "p-4 overflow-scroll",
-            selectedVerse ? "" : "pb-20"
-          )}
-        >
+    <PageLayout
+      menuBar={
+        <MenuBar
+          currentPage={Page.HOME}
+          hasBibleSelector
+          selectedChapter={`${book.current} ${chapter.current}`}
+          setSelectedChapter={(value) => {
+            const newBook = value.substring(0, value.lastIndexOf(" "));
+            const newChapter = value.substring(
+              value.lastIndexOf(" ") + 1,
+              value.length
+            );
+            router.push(`/?book=${newBook}&chapter=${newChapter}`);
+          }}
+          selectedVersion={"NET"}
+          setSelectedVersion={(value) => {}}
+        />
+      }
+    >
+      <div className="h-full flex flex-col justify-between">
+        <div className="p-4 overflow-scroll">
           <div className="text-xl font-bold my-4">
             {text?.bookname} {text?.chapter}
           </div>
@@ -103,7 +117,7 @@ export default function Home() {
           </div>
         </div>
         {selectedVerse && (
-          <div className="w-full pb-[30px]">
+          <div className="w-full">
             <NoteEditor
               book={book.current || ""}
               chapter={chapter.current || 0}
@@ -117,21 +131,6 @@ export default function Home() {
           </div>
         )}
       </div>
-      <MenuBar
-        currentPage={Page.HOME}
-        hasBibleSelector
-        selectedChapter={`${book.current} ${chapter.current}`}
-        setSelectedChapter={(value) => {
-          const newBook = value.substring(0, value.lastIndexOf(" "));
-          const newChapter = value.substring(
-            value.lastIndexOf(" ") + 1,
-            value.length
-          );
-          router.push(`/?book=${newBook}&chapter=${newChapter}`);
-        }}
-        selectedVersion={"NET"}
-        setSelectedVersion={(value) => {}}
-      />
-    </div>
+    </PageLayout>
   );
 }

@@ -62,56 +62,62 @@ const MenuBar: React.FC<Props> = ({
   return (
     <div>
       {navigationOpen && (
-        <div className="absolute bottom-0 pb-[50px] w-full bg-gray-100 flex flex-col items-fill">
-          <Link href="/">
-            <div
-              className={classNames(
-                currentPage === Page.HOME ? "bg-gray-300" : "",
-                "p-2 w-full flex gap-10"
-              )}
-            >
-              {pageAsIcon(Page.HOME)}
-              {pageAsString(Page.HOME)}
-            </div>
-          </Link>
-          <Link href="/notes">
-            <div
-              className={classNames(
-                currentPage === Page.NOTES ? "bg-gray-300" : "",
-                "p-2 w-full flex gap-10"
-              )}
-            >
-              {pageAsIcon(Page.NOTES)}
-              {pageAsString(Page.NOTES)}
-            </div>
-          </Link>
-          <Link href="/feed">
-            <div
-              className={classNames(
-                currentPage === Page.FEED ? "bg-gray-300" : "",
-                "p-2 w-full flex gap-10"
-              )}
-            >
-              {pageAsIcon(Page.FEED)}
-              {pageAsString(Page.FEED)}
-            </div>
-          </Link>
-          <Link href="/profile">
-            <div
-              className={classNames(
-                currentPage === Page.PROFILE ? "bg-gray-300" : "",
-                "p-2 w-full flex gap-10"
-              )}
-            >
-              {pageAsIcon(Page.PROFILE)}
-              {pageAsString(Page.PROFILE)}
-            </div>
-          </Link>
+        <div className="absolute bottom-0 pb-[50px] h-screen w-screen flex flex-col">
+          <div className="h-full" onClick={() => setNavigationOpen(false)} />
+          <div className="w-full bg-white flex flex-col items-fill shadow">
+            <Link href="/">
+              <div
+                className={classNames(
+                  currentPage === Page.HOME ? "bg-gray-100" : "",
+                  "w-full flex gap-10 px-9 py-4"
+                )}
+              >
+                {pageAsIcon(Page.HOME)}
+                {pageAsString(Page.HOME)}
+              </div>
+            </Link>
+            <div className="h-px bg-black mx-9" />
+            <Link href="/notes">
+              <div
+                className={classNames(
+                  currentPage === Page.NOTES ? "bg-gray-100" : "",
+                  "w-full flex gap-10 px-9 py-4"
+                )}
+              >
+                {pageAsIcon(Page.NOTES)}
+                {pageAsString(Page.NOTES)}
+              </div>
+            </Link>
+            <div className="h-px bg-black mx-9" />
+            <Link href="/feed">
+              <div
+                className={classNames(
+                  currentPage === Page.FEED ? "bg-gray-100" : "",
+                  "w-full flex gap-10 px-9 py-4"
+                )}
+              >
+                {pageAsIcon(Page.FEED)}
+                {pageAsString(Page.FEED)}
+              </div>
+            </Link>
+            <div className="h-px bg-black mx-9" />
+            <Link href="/profile">
+              <div
+                className={classNames(
+                  currentPage === Page.PROFILE ? "bg-gray-100" : "",
+                  "w-full flex gap-10 px-9 py-4"
+                )}
+              >
+                {pageAsIcon(Page.PROFILE)}
+                {pageAsString(Page.PROFILE)}
+              </div>
+            </Link>
+          </div>
         </div>
       )}
       <div
         className={classNames(
-          "grid w-full bg-gray-200 fixed bottom-0 items-center px-2",
+          "grid w-full bg-gray-200 items-center px-2 z-50 relative h-[50px]",
           hasBibleSelector ? "grid-cols-3" : "grid-cols-1"
         )}
       >

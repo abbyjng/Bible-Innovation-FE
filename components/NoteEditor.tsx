@@ -38,7 +38,7 @@ const NoteEditor: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col justify-end bg-white px-4 py-2 gap-4">
+    <div className="flex flex-col justify-end bg-white px-4 py-2 gap-4 shadow">
       <Editor
         apiKey={process.env.NEXT_PUBLIC_TINY_API_KEY}
         onInit={(_, editor) => (editorRef.current = editor)}
