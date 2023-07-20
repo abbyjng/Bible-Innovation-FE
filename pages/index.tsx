@@ -77,38 +77,46 @@ export default function Home() {
 
   return (
     <div>
-      <div className="p-4 pb-20">
-        <div className="text-xl font-bold my-4">
-          {text?.bookname} {text?.chapter}
+      <div className="h-screen flex flex-col justify-between">
+        <div
+          className={classNames(
+            "p-4 overflow-scroll",
+            selectedVerse ? "" : "pb-20"
+          )}
+        >
+          <div className="text-xl font-bold my-4">
+            {text?.bookname} {text?.chapter}
+          </div>
+          <div>
+            {text?.verses.map((verse) => {
+              return (
+                <Verse
+                  key={Object.keys(verse)[0]}
+                  verse={verse}
+                  isSelected={selectedVerse === verse}
+                  setSelectedVerse={(verse) => {
+                    setSelectedVerse(verse);
+                  }}
+                />
+              );
+            })}
+          </div>
         </div>
-        <div>
-          {text?.verses.map((verse) => {
-            return (
-              <Verse
-                key={Object.keys(verse)[0]}
-                verse={verse}
-                setSelectedVerse={(verse) => {
-                  setSelectedVerse(verse);
-                }}
-              />
-            );
-          })}
-        </div>
+        {selectedVerse && (
+          <div className="w-full pb-[30px]">
+            <NoteEditor
+              book={book.current || ""}
+              chapter={chapter.current || 0}
+              verse={selectedVerse}
+              content={""}
+              onSave={(noteData: NoteDataType) => {
+                setSelectedVerse(undefined);
+                // TODO: send content to backend to save note
+              }}
+            />
+          </div>
+        )}
       </div>
-      {selectedVerse && (
-        <div className="z-50 fixed bottom-0 w-full">
-          <NoteEditor
-            book={book.current || ""}
-            chapter={chapter.current || 0}
-            verse={selectedVerse}
-            content={""}
-            onSave={(noteData: NoteDataType) => {
-              setSelectedVerse(undefined);
-              // TODO: send content to backend to save note
-            }}
-          />
-        </div>
-      )}
       <MenuBar
         currentPage={Page.HOME}
         hasBibleSelector

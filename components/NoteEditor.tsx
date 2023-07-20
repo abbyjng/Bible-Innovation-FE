@@ -20,7 +20,10 @@ const NoteEditor: React.FC<Props> = ({
   content,
   onSave,
 }) => {
+  const overallRef = useRef<any>();
   const editorRef = useRef<any>();
+
+  const [saveDisabled, setSaveDisabled] = useState<boolean>(true);
 
   const saveData = (content: string) => {
     const noteData: NoteDataType = {
@@ -35,33 +38,34 @@ const NoteEditor: React.FC<Props> = ({
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col justify-end bg-black/80 p-4 gap-4">
-      <div className="bg-white rounded p-4">
-        <Verse verse={verse} />
-      </div>
+    <div className="flex flex-col justify-end bg-white px-4 py-2 gap-4">
       <Editor
         apiKey={process.env.NEXT_PUBLIC_TINY_API_KEY}
-        onInit={(evt, editor) => (editorRef.current = editor)}
+        onInit={(_, editor) => (editorRef.current = editor)}
+        onEditorChange={(value) => {
+          setSaveDisabled(value === "");
+        }}
         initialValue={content}
         init={{
-          height: 500,
+          height: "40vh",
           menubar: "false",
-          plugins: [
-            // TODO: pick plugins https://www.tiny.cloud/docs/plugins/opensource/
-          ],
-          // TODO: pick formatting options https://www.tiny.cloud/docs/advanced/available-toolbar-buttons/
-          toolbar:
-            "formatselect | " +
-            "bold italic backcolor " +
-            "| bullist numlist outdent indent | " +
-            "removeformat | help",
+          toolbar: "bold italic forecolor backcolor outdent indent | help",
           content_style:
             "body { font-family:Helvetica,Arial,sans-serif; font-size:16px }",
+          skin_url: "/tinymceSkin",
+          statusbar: false,
         }}
       />
       <div
-        className="w-full bg-gray-200 text-center rounded p-4 text-lg mb-4 cursor-pointer"
-        onClick={() => saveData(editorRef.current.getContent())}
+        className={classNames(
+          "w-full bg-gray-200 text-center rounded p-4 text-lg mb-4 bg-gray-200",
+          saveDisabled ? "text-gray-400" : "cursor-pointer"
+        )}
+        onClick={() => {
+          if (!saveDisabled) {
+            saveData(editorRef.current.getContent());
+          }
+        }}
       >
         Save
       </div>

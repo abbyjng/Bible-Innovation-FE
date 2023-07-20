@@ -88,7 +88,7 @@ export const BOOKS = [
   "Nehemiah",
   "Esther",
   "Job",
-  "Psalm",
+  "Psalms",
   "Proverbs",
   "Ecclesiastes",
   "Song of Solomon",
