@@ -49,11 +49,29 @@ const NoteEditor: React.FC<Props> = ({
         init={{
           height: "40vh",
           menubar: "false",
-          toolbar: "bold italic forecolor backcolor outdent indent | help",
+          plugins: "formatpainter",
+          toolbar:
+            "bold italic backcolor formatpainter alignleft alignright | help",
           content_style:
             "body { font-family:Helvetica,Arial,sans-serif; font-size:16px }",
           skin_url: "/tinymceSkin",
           statusbar: false,
+          color_map: [
+            "#ff6b6b",
+            "Light Red",
+            "#ffb46f",
+            "Sandy Brown",
+            "#ffe894",
+            "Jasmine",
+            "#b0f5b3",
+            "Celadon",
+            "#86f7f5",
+            "Ice Blue",
+            "#dcaff8",
+            "Mauve",
+          ],
+          custom_colors: false,
+          color_cols: 7,
         }}
       />
       <div
