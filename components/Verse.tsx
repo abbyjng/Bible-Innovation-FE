@@ -1,14 +1,20 @@
 import React from "react";
-import { Page, VerseType } from "../utils/types";
+import { VerseType } from "../utils/types";
 import { classNames } from "@/utils/helper";
 
 interface Props {
   verse: VerseType;
   isSelected: boolean;
   setSelectedVerse?: (verse: VerseType) => void;
+  highlight?: string;
 }
 
-const Verse: React.FC<Props> = ({ verse, isSelected, setSelectedVerse }) => {
+const Verse: React.FC<Props> = ({
+  verse,
+  isSelected,
+  setSelectedVerse,
+  highlight,
+}) => {
   const number = Object.keys(verse)[0];
   const text = verse[number];
   return (
@@ -18,7 +24,11 @@ const Verse: React.FC<Props> = ({ verse, isSelected, setSelectedVerse }) => {
         document.getElementById(number)?.scrollIntoView({ behavior: "smooth" });
       }}
       id={number}
-      className={classNames(isSelected ? "underline" : "", "scroll-m-10")}
+      className={classNames(
+        isSelected ? "underline" : "",
+        "scroll-m-10",
+        highlight ? highlight : ""
+      )}
     >
       <span className="text-xs px-1 align-text-top">{number}</span>
       <span>{text}</span>

@@ -137,3 +137,27 @@ export const BOOKS = [
   "Jude",
   "Revelation",
 ];
+
+export const highlightOptions = [
+  "bg-[#F72F35]",
+  "bg-[#F78D2F]",
+  "bg-[#FDFF32]",
+  "bg-[#8CFF32]",
+  "bg-[#2FF7F1]",
+  "bg-[#F72FE1]",
+];
+
+export const textOptions = [
+  "#ff6b6b",
+  "Light Red",
+  "#ffb46f",
+  "Sandy Brown",
+  "#ffe894",
+  "Jasmine",
+  "#b0f5b3",
+  "Celadon",
+  "#86f7f5",
+  "Ice Blue",
+  "#dcaff8",
+  "Mauve",
+];
