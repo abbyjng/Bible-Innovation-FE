@@ -77,9 +77,9 @@ export default function Profile() {
         {/* User Posts */}
         <div className="text-center">
           <p className="font-bold mt-8 mb-8">Posts</p>
-          <div className="flex mb-8">
+          <div className="flex mb-8 w-[200px] h-[200px]">
             {/* <Image
-              className="w-[200px] h-[200px]"
+              // className="w-[200px] h-[200px]"
               src="https://www.thesprucepets.com/thmb/uQnGtOt9VQiML2oG2YzAmPErrHo=/5441x0/filters:no_upscale():strip_icc()/all-about-tabby-cats-552489-hero-a23a9118af8c477b914a0a1570d4f787.jpg"
               alt="post"
             ></Image> */}
