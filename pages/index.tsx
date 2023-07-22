@@ -22,6 +22,7 @@ export default function Home() {
   const [highlightPopupOpen, setHighlightPopupOpen] = useState<boolean>(false);
   const [noteEditorOpen, setNoteEditorOpen] = useState<boolean>(false);
   const [highlights, setHighlights] = useState<string[]>([]);
+  const [scrollVerse, setScrollVerse] = useState<string>();
 
   const checkLocalStorage = () => {
     const storedBook = localStorage.getItem("book") as string;
@@ -77,6 +78,12 @@ export default function Home() {
     }
   });
 
+  useEffect(() => {
+    if (text && router.query?.verse && router.query?.verse !== scrollVerse) {
+      setScrollVerse(router.query?.verse as string);
+    }
+  }, [text, router, scrollVerse]);
+
   if (!text) {
     return <Loader />;
   }
@@ -128,6 +135,7 @@ export default function Home() {
                     setHighlightPopupOpen(true);
                   }}
                   highlight={highlights[index]}
+                  shouldScroll={Object.keys(verse)[0] === scrollVerse}
                 />
               );
             })}

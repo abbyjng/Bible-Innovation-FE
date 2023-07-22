@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { VerseType } from "../utils/types";
 import { classNames } from "@/utils/helper";
 
@@ -7,6 +7,7 @@ interface Props {
   isSelected: boolean;
   setSelectedVerse?: (verse: VerseType) => void;
   highlight?: string;
+  shouldScroll: boolean;
 }
 
 const Verse: React.FC<Props> = ({
@@ -14,9 +15,17 @@ const Verse: React.FC<Props> = ({
   isSelected,
   setSelectedVerse,
   highlight,
+  shouldScroll,
 }) => {
   const number = Object.keys(verse)[0];
   const text = verse[number];
+
+  useEffect(() => {
+    if (shouldScroll) {
+      document.getElementById(number)?.scrollIntoView({ behavior: "smooth" });
+    }
+  });
+
   return (
     <span
       onClick={() => {
