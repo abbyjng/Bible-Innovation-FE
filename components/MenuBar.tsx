@@ -9,6 +9,7 @@ import BookIcon from "./icons/BookIcon";
 import CreateNoteIcon from "./icons/CreateNoteIcon";
 import FeedIcon from "./icons/FeedIcon";
 import ProfileIcon from "./icons/ProfileIcon";
+import SearchPage from "./SearchPage";
 
 interface Props {
   currentPage: Symbol;
@@ -28,6 +29,7 @@ const MenuBar: React.FC<Props> = ({
   setSelectedVersion,
 }) => {
   const [navigationOpen, setNavigationOpen] = useState<boolean>(false);
+  const [searchPageOpen, setSearchPageOpen] = useState<boolean>(false);
 
   const pageAsString = (page: Symbol) => {
     switch (page) {
@@ -155,9 +157,18 @@ const MenuBar: React.FC<Props> = ({
           </div>
         </div>
         {hasBibleSelector && (
-          <div className="text-xl mt-2 mb-2 cursor-pointer justify-self-end">
+          <div
+            className="text-xl mt-2 mb-2 cursor-pointer justify-self-end"
+            onClick={() => setSearchPageOpen(true)}
+          >
             <SearchIcon className="w-6 h-6" />
           </div>
+        )}
+        {searchPageOpen && selectedVersion && (
+          <SearchPage
+            version={selectedVersion}
+            hideSearchPage={() => setSearchPageOpen(false)}
+          />
         )}
       </div>
     </div>

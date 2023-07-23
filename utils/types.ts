@@ -21,3 +21,16 @@ export interface NoteDataType {
   verse: number;
   note: string;
 }
+
+export interface SearchPageType {
+  page: number;
+  pageCount: number;
+  content: SearchType[];
+}
+
+export interface SearchType {
+  book: string;
+  chapter: number;
+  verse: number;
+  text: string;
+}
