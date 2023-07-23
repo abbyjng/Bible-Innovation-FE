@@ -10,12 +10,12 @@ import CreateNoteIcon from "./icons/CreateNoteIcon";
 import FeedIcon from "./icons/FeedIcon";
 import ProfileIcon from "./icons/ProfileIcon";
 import SearchPage from "./SearchPage";
+import VerseSelector from "./VerseSelector";
 
 interface Props {
   currentPage: Symbol;
   hasBibleSelector?: boolean;
   selectedChapter?: string;
-  setSelectedChapter?: (book: string) => void;
   selectedVersion?: string;
   setSelectedVersion?: (chapter: string) => void;
 }
@@ -24,7 +24,6 @@ const MenuBar: React.FC<Props> = ({
   currentPage,
   hasBibleSelector = false,
   selectedChapter,
-  setSelectedChapter,
   selectedVersion,
   setSelectedVersion,
 }) => {
@@ -125,28 +124,13 @@ const MenuBar: React.FC<Props> = ({
       >
         {hasBibleSelector &&
           selectedChapter &&
-          setSelectedChapter &&
           selectedVersion &&
           setSelectedVersion && (
-            <div className="flex gap-2 justify-self-start">
-              <Selector
-                selected={selectedChapter}
-                setSelected={setSelectedChapter}
-                options={BOOKS.map((book) => {
-                  return Array.from(
-                    { length: CHAPTER_COUNTS[book] },
-                    (_, i) => `${book} ${i + 1}`
-                  );
-                }).reduce(function (pre, cur) {
-                  return pre.concat(cur);
-                })}
-              />
-              <Selector
-                selected={selectedVersion}
-                setSelected={setSelectedVersion}
-                options={["NET"]}
-              />
-            </div>
+            <VerseSelector
+              selectedChapter={selectedChapter}
+              selectedVersion={selectedVersion}
+              setSelectedVersion={setSelectedVersion}
+            />
           )}
         <div className="text-xl mt-2 mb-2 justify-self-center">
           <div

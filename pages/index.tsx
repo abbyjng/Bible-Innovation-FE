@@ -95,14 +95,6 @@ export default function Home() {
           currentPage={Page.HOME}
           hasBibleSelector
           selectedChapter={`${book.current} ${chapter.current}`}
-          setSelectedChapter={(value) => {
-            const newBook = value.substring(0, value.lastIndexOf(" "));
-            const newChapter = value.substring(
-              value.lastIndexOf(" ") + 1,
-              value.length
-            );
-            router.push(`/?book=${newBook}&chapter=${newChapter}`);
-          }}
           selectedVersion={"NET"}
           setSelectedVersion={(value) => {}}
         />

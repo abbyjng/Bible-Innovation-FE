@@ -34,3 +34,12 @@ export interface SearchType {
   verse: number;
   text: string;
 }
+
+export interface VersionInfoType {
+  OT: TestamentType[];
+  NT: TestamentType[];
+}
+
+interface TestamentType {
+  [book: string]: number;
+}

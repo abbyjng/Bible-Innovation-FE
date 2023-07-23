@@ -8,7 +8,7 @@ interface Props {
 const PageLayout: React.FC<Props> = ({ children, menuBar }) => {
   return (
     <div className="h-screen w-screen flex flex-col justify-between">
-      <div className="overflow-scroll">{children}</div>
+      <div className="overflow-scroll h-full">{children}</div>
       <div>{menuBar}</div>
     </div>
   );
