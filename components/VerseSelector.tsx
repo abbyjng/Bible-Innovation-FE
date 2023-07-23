@@ -7,6 +7,7 @@ import { VersionInfoType } from "@/utils/types";
 import Loader from "./Loader";
 import { classNames } from "@/utils/helper";
 import ArrowIcon from "./icons/ArrowIcon";
+import SearchPage from "./SearchPage";
 
 interface Props {
   selectedChapter: string;
@@ -26,6 +27,7 @@ const VerseSelector: React.FC<Props> = ({
   const [book, setBook] = useState<string>();
   const [numChapters, setNumChapters] = useState<number>();
   const [chapter, setChapter] = useState<number>();
+  const [searchPageOpen, setSearchPageOpen] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -147,7 +149,10 @@ const VerseSelector: React.FC<Props> = ({
             >
               Old Testament
             </div>
-            <SearchIcon className="stroke-black h-5 w-5" />
+            <div onClick={() => setSearchPageOpen(true)}>
+              <SearchIcon className="stroke-black h-5 w-5" />
+            </div>
+
             <div
               className={classNames(testament === "NT" ? "font-bold" : "")}
               onClick={() => {
@@ -157,6 +162,12 @@ const VerseSelector: React.FC<Props> = ({
             >
               New Testament
             </div>
+            {searchPageOpen && selectedVersion && (
+              <SearchPage
+                version={selectedVersion}
+                hideSearchPage={() => setSearchPageOpen(false)}
+              />
+            )}
           </div>
         </div>
       )}
