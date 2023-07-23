@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { VerseType } from "../utils/types";
 import { classNames } from "@/utils/helper";
 
@@ -7,7 +7,7 @@ interface Props {
   isSelected: boolean;
   setSelectedVerse?: (verse: VerseType) => void;
   highlight?: string;
-  shouldScroll: boolean;
+  routerVerse: boolean;
 }
 
 const Verse: React.FC<Props> = ({
@@ -15,16 +15,19 @@ const Verse: React.FC<Props> = ({
   isSelected,
   setSelectedVerse,
   highlight,
-  shouldScroll,
+  routerVerse,
 }) => {
   const number = Object.keys(verse)[0];
   const text = verse[number];
 
+  const [hasScrolled, setHasScrolled] = useState<boolean>(false);
+
   useEffect(() => {
-    if (shouldScroll) {
+    if (routerVerse) {
       document.getElementById(number)?.scrollIntoView({ behavior: "smooth" });
+      setHasScrolled(true);
     }
-  });
+  }, [number, routerVerse]);
 
   return (
     <span
@@ -35,8 +38,9 @@ const Verse: React.FC<Props> = ({
       id={number}
       className={classNames(
         isSelected ? "underline" : "",
-        "scroll-m-10",
-        highlight ? highlight : ""
+        "scroll-m-10 transition-[background-color] delay-[1000ms] duration-300",
+        highlight ? highlight : "",
+        !hasScrolled && routerVerse ? "bg-[#c4ecff]" : "bg-[#c4ecff]/0"
       )}
     >
       <span className="text-xs px-1 align-text-top">{number}</span>

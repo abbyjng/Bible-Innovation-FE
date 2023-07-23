@@ -135,7 +135,7 @@ export default function Home() {
                     setHighlightPopupOpen(true);
                   }}
                   highlight={highlights[index]}
-                  shouldScroll={Object.keys(verse)[0] === scrollVerse}
+                  routerVerse={Object.keys(verse)[0] === scrollVerse}
                 />
               );
             })}
