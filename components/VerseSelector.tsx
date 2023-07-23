@@ -49,7 +49,6 @@ const VerseSelector: React.FC<Props> = ({
             router.push("500");
           } else {
             setVersionInfo(versionInfo);
-            console.log(versionInfo);
           }
         }
       );

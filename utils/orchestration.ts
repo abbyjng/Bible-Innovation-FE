@@ -34,7 +34,7 @@ export const search = async (
       }
     );
     const result = await response.json();
-    return { ...result, page: Number(result.page) }; // TODO: temp fix for the page returning as string
+    return result;
   } catch (e) {
     console.log("Error: ", e);
   }
