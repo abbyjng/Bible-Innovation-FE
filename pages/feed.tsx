@@ -29,7 +29,22 @@ export default function Feed() {
 
   return (
     <PageLayout menuBar={<MenuBar currentPage={Page.FEED} />}>
-      <div className="p-2 pb-20"></div>
+      <div className="p-2 pb-20">
+        {/* this is going to be hardcoded for now as an example */}
+        <div className="ml-2 mr-2">
+          <img
+            src="https://www.thesprucepets.com/thmb/uQnGtOt9VQiML2oG2YzAmPErrHo=/5441x0/filters:no_upscale():strip_icc()/all-about-tabby-cats-552489-hero-a23a9118af8c477b914a0a1570d4f787.jpg"
+            alt="post"
+          ></img>
+          <div className="bg-gray-200">
+            <p>profile icon here</p>
+            <p>username</p>
+            <p>heart icon here</p>
+            <p>comment icon here</p>
+            <p>bookmark(?) icon here</p>
+          </div>
+        </div>
+      </div>
     </PageLayout>
   );
 }
