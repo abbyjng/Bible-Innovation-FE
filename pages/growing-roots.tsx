@@ -93,6 +93,7 @@ export default function Notes() {
         <MenuBar
           currentPage={Page.GROWING_ROOTS}
           timer={sessionComplete ? undefined : countdown}
+          hasStartedSession={!!text}
         />
       }
     >

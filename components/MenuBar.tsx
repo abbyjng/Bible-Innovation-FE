@@ -22,6 +22,7 @@ interface Props {
   setSelectedBookChapter?: (book: string, chapter: number) => void;
   setSelectedVersion?: (version: string) => void;
   timer?: any;
+  hasStartedSession?: boolean;
 }
 
 const MenuBar: React.FC<Props> = ({
@@ -33,6 +34,7 @@ const MenuBar: React.FC<Props> = ({
   setSelectedBookChapter,
   setSelectedVersion,
   timer,
+  hasStartedSession,
 }) => {
   const [navigationOpen, setNavigationOpen] = useState<boolean>(false);
   const [searchPageOpen, setSearchPageOpen] = useState<boolean>(false);
@@ -187,7 +189,7 @@ const MenuBar: React.FC<Props> = ({
         <div className="text-xl mt-2 mb-2 justify-self-center">
           <div
             onClick={() => {
-              if (timer) {
+              if (timer && hasStartedSession) {
                 setTimerPopupOpen(true);
               } else {
                 setNavigationOpen(!navigationOpen);
