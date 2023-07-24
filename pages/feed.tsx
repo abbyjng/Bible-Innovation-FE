@@ -6,6 +6,10 @@ import { Page } from "@/utils/types";
 import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
+import ProfileIcon from "@/components/icons/ProfileIcon";
+import HeartIcon from "@/components/icons/HeartIcon";
+import BookmarkIcon from "@/components/icons/BookmarkIcon";
+import CommentIcon from "@/components/icons/CommentIcon";
 
 export default function Feed() {
   const [posts, setPosts] = useState<any[]>([]); // TODO: figure out typing
@@ -37,11 +41,19 @@ export default function Feed() {
             alt="post"
           ></img>
           <div className="bg-gray-200">
-            <p>profile icon here</p>
-            <p>username</p>
-            <p>heart icon here</p>
-            <p>comment icon here</p>
-            <p>bookmark(?) icon here</p>
+            <div className="flex pt-[5px]">
+              <ProfileIcon className="fill-black" />
+              <p className="ml-3">username</p>
+              <div className="flex">
+                <HeartIcon className="fill-black" />
+                <CommentIcon className="fill-black" />
+                <BookmarkIcon className="fill-black" />
+              </div>
+            </div>
+            <div className="flex">
+              <p>|</p>
+              <p className="text-zinc-400">View Thread</p>
+            </div>
           </div>
         </div>
       </div>
