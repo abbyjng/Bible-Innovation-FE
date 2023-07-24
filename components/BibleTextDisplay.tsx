@@ -25,6 +25,12 @@ const BibleTextDisplay: React.FC<Props> = ({ text }) => {
     }
   }, [text, router, scrollVerse]);
 
+  useEffect(() => {
+    if (text) {
+      setHighlights(Array(text.verses.length).fill(""));
+    }
+  }, [text]);
+
   return (
     <div className="h-full flex flex-col justify-between">
       <div

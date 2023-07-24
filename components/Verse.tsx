@@ -38,9 +38,15 @@ const Verse: React.FC<Props> = ({
       id={number}
       className={classNames(
         isSelected ? "underline" : "",
-        "scroll-m-10 transition-[background-color] delay-[1000ms] duration-300",
-        highlight ? highlight : "",
-        !hasScrolled && routerVerse ? "bg-[#c4ecff]" : "bg-[#c4ecff]/0"
+        "scroll-m-10",
+        highlight
+          ? highlight
+          : "transition-[background-color] delay-[1000ms] duration-300",
+        !hasScrolled && routerVerse
+          ? "bg-[#c4ecff]"
+          : highlight && highlight !== ""
+          ? highlight
+          : "bg-[#c4ecff]/0"
       )}
     >
       <span className="text-xs px-1 align-text-top">{number}</span>

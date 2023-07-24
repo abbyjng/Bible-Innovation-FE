@@ -3,14 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
-import { ChapterType, NoteDataType, Page, VerseType } from "@/utils/types";
-import Verse from "@/components/Verse";
-import NoteEditor from "@/components/NoteEditor";
-import { classNames, getNumber } from "@/utils/helper";
+import { ChapterType, Page } from "@/utils/types";
+import { getNumber } from "@/utils/helper";
 import { getText } from "@/utils/orchestration";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
-import HighlightPopup from "@/components/HighlightPopup";
 import BibleTextDisplay from "@/components/BibleTextDisplay";
 
 export default function Home() {
@@ -20,8 +17,6 @@ export default function Home() {
   const version = useRef<string>();
 
   const [text, setText] = useState<ChapterType>();
-  const [notes, setNotes] = useState<string[]>([]);
-  const [highlights, setHighlights] = useState<string[]>([]);
 
   const checkLocalStorage = () => {
     const storedBook = localStorage.getItem("book") as string;
@@ -52,7 +47,6 @@ export default function Home() {
         router.push("/");
       } else {
         setText(text);
-        setHighlights(Array(text.verses.length).fill(""));
 
         // set localStorage to the current viewing book, chapter, and version so that the next load will use the same chapter
         localStorage.setItem("book", book);
