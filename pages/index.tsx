@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
 import { ChapterType, Page } from "@/utils/types";
 import { getNumber } from "@/utils/helper";
-import { getText } from "@/utils/orchestration";
+import { getText, setStreak } from "@/utils/orchestration";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import BibleTextDisplay from "@/components/BibleTextDisplay";
+import { useAuth } from "@/UserContext";
 
 export default function Home() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function Home() {
   const version = useRef<string>();
 
   const [text, setText] = useState<ChapterType>();
+
+  const { loading, streak, updateStreak } = useAuth();
 
   const checkLocalStorage = () => {
     const storedBook = localStorage.getItem("book") as string;
@@ -82,8 +85,24 @@ export default function Home() {
     }
   });
 
-  if (!text) {
+  if (!text || loading) {
     return <Loader />;
+  }
+
+  if (streak) {
+    const now = new Date();
+    const lastIncrement = new Date(streak["last-increment"]);
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (
+      yesterday.getDate() === lastIncrement.getDate() &&
+      yesterday.getMonth() === lastIncrement.getMonth() &&
+      yesterday.getFullYear() === lastIncrement.getFullYear()
+    ) {
+      updateStreak(streak.count + 1, now.getTime());
+    } else if (now.getTime() - lastIncrement.getTime() > 1000 * 60 * 60 * 48) {
+      updateStreak(1, now.getTime());
+    }
   }
 
   return (

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import MenuBar from "@/components/MenuBar";
 import { Page } from "@/utils/types";
-import { useAuth } from "@/auth_context";
+import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 

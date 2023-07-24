@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import MenuBar from "@/components/MenuBar";
 import { ChapterType, NoteDataType, Page } from "@/utils/types";
-import { useAuth } from "@/auth_context";
+import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import VerseSelector from "@/components/VerseSelector";

@@ -1,4 +1,9 @@
-import { ChapterType, SearchPageType, VersionInfoType } from "./types";
+import {
+  ChapterType,
+  SearchPageType,
+  StreakType,
+  VersionInfoType,
+} from "./types";
 
 export const getText = async (
   book: string,
@@ -68,6 +73,25 @@ export const getVersions = async (): Promise<string[] | undefined> => {
     );
     const result = await response.json();
     return result.versions;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+export const setStreak = async (
+  jwt: string,
+  streakData: StreakType
+): Promise<ChapterType | undefined> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/streak`, {
+      method: "GET",
+      headers: {
+        user: jwt,
+        "streak-data": JSON.stringify(streakData),
+      },
+    });
+    const result = await response.json();
+    return result;
   } catch (e) {
     console.log("Error: ", e);
   }

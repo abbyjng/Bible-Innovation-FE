@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import MenuBar from "@/components/MenuBar";
 import { Page } from "@/utils/types";
 import Link from "next/link";
-import { useAuth } from "@/auth_context";
+import { useAuth } from "@/UserContext";
 import Image from "next/image";
 import DefaultImg from "../assets/default.png";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 
 export default function Profile() {
-  const { loading, isAuthenticated, user, logout } = useAuth();
+  const { loading, isAuthenticated, user, logout, streak } = useAuth();
 
   useEffect(() => {
     // checks if the user is authenticated
@@ -48,7 +48,7 @@ export default function Profile() {
         {/* User Statistics */}
         <div className="text-center flex justify-between m-4">
           <div>
-            <p className="font-bold">0</p>
+            <p className="font-bold">{streak?.count}</p>
             <p>Streak</p>
           </div>
           <div>

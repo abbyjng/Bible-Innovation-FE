@@ -1,6 +1,6 @@
 /* Sign out page */
 
-import { useAuth } from "@/auth_context";
+import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import { useEffect } from "react";
 

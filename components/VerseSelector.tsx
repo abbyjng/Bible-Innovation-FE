@@ -25,7 +25,7 @@ const VerseSelector: React.FC<Props> = ({
   setSelectedVersion,
 }) => {
   const [verseSelectorOpen, setVerseSelectorOpen] = useState<boolean>(false);
-  const [versions, setVersions] = useState<string[]>([]); // TODO: fetch from API
+  const [versions, setVersions] = useState<string[]>([]);
   const [versionInfo, setVersionInfo] = useState<VersionInfoType>();
   const [testament, setTestament] = useState<string>("OT");
   const [book, setBook] = useState<string>();

@@ -6,6 +6,28 @@ export const Page = {
   GROWING_ROOTS: Symbol("GrowingRoots"),
 };
 
+export interface UserContextType {
+  isAuthenticated: boolean;
+  loading: boolean;
+  user?: UserType;
+  streak?: StreakType;
+  signUp: (displayName: string, email: string, password: string) => void;
+  login: (email: string, password: string) => void;
+  logout: () => void;
+  updateStreak: (count: number, lastIncrement: number) => void;
+}
+
+export interface UserType {
+  displayName: string;
+  uid: string;
+  photoURL: string;
+}
+
+export interface StreakType {
+  count: number;
+  "last-increment": number;
+}
+
 export interface ChapterType {
   bookname: string;
   chapter: number;

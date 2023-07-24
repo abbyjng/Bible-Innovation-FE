@@ -2,37 +2,41 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { UserContextType, StreakType, UserType } from "./utils/types";
 
-interface AuthContextType {
-  isAuthenticated: boolean;
-  loading: boolean;
-  user: any;
-  signUp: (displayName: string, email: string, password: string) => void;
-  login: (email: string, password: string) => void;
-  logout: () => void;
-}
-
-const AuthContext = React.createContext({} as AuthContextType);
+const UserContext = React.createContext({} as UserContextType);
 
 export const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState(null);
-  const [storedToken, setStoredToken] = useState("");
+  const [user, setUser] = useState<UserType>();
+  const [streak, setStreak] = useState<StreakType>();
+  const [token, setToken] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
 
   useEffect(() => {
     async function fetchUserFromCookie() {
-      const token = Cookies.get("token");
-      if (token) {
-        setStoredToken(token);
+      const cookieToken = Cookies.get("token");
+      if (cookieToken) {
+        setToken(cookieToken);
         const user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
           method: "GET",
           headers: {
-            user: token,
+            user: cookieToken,
           },
         });
         if (user && user.status === 200) setUser(await user.json());
+
+        const streak = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/streak`,
+          {
+            method: "GET",
+            headers: {
+              user: cookieToken,
+            },
+          }
+        );
+        if (streak && streak.status === 200) setStreak(await streak.json());
       }
       setIsLoading(false);
     }
@@ -41,7 +45,7 @@ export const AuthProvider = ({ children }: any) => {
 
   const setTokenAndUser = async (token: string) => {
     Cookies.set("token", token);
-    setStoredToken(token);
+    setToken(token);
     const user = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
       method: "GET",
       headers: {
@@ -49,6 +53,14 @@ export const AuthProvider = ({ children }: any) => {
       },
     });
     if (user && user.status === 200) setUser(await user.json());
+
+    const streak = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/streak`, {
+      method: "GET",
+      headers: {
+        user: token,
+      },
+    });
+    if (streak && streak.status === 200) setStreak(await streak.json());
   };
 
   const signUp = async (
@@ -82,25 +94,47 @@ export const AuthProvider = ({ children }: any) => {
 
   const logout = () => {
     Cookies.remove("token");
-    setUser(null);
-    setStoredToken("");
+    setUser(undefined);
+    setToken("");
     router.push("/signin");
   };
 
+  const updateStreak = async (count: number, lastIncrement: number) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/streak`, {
+      method: "POST",
+      headers: {
+        user: token as string,
+        "streak-data": JSON.stringify({
+          count: count,
+          lastIncrement: lastIncrement,
+        }),
+      },
+    });
+    const result = await response.text();
+    if (result === "Success") {
+      setStreak({
+        count: count,
+        "last-increment": lastIncrement,
+      });
+    }
+  };
+
   return (
-    <AuthContext.Provider
+    <UserContext.Provider
       value={{
         isAuthenticated: !!user,
         loading: isLoading,
         user,
+        streak,
         signUp,
         login,
         logout,
+        updateStreak,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(UserContext);
