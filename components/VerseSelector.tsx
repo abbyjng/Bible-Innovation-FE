@@ -10,14 +10,18 @@ import ArrowIcon from "./icons/ArrowIcon";
 import SearchPage from "./SearchPage";
 
 interface Props {
-  selectedChapter: string;
+  selectedBook: string;
+  selectedChapter: number;
   selectedVersion: string;
-  setSelectedVersion: (chapter: string) => void;
+  setSelectedBookChapter: (book: string, chapter: number) => void;
+  setSelectedVersion: (version: string) => void;
 }
 
 const VerseSelector: React.FC<Props> = ({
+  selectedBook,
   selectedChapter,
   selectedVersion,
+  setSelectedBookChapter,
   setSelectedVersion,
 }) => {
   const [verseSelectorOpen, setVerseSelectorOpen] = useState<boolean>(false);
@@ -57,12 +61,12 @@ const VerseSelector: React.FC<Props> = ({
 
   useEffect(() => {
     if (book && chapter) {
-      router.push(`/?book=${book}&chapter=${chapter}`);
+      setSelectedBookChapter(book, chapter);
       setVerseSelectorOpen(false);
       setBook(undefined);
       setChapter(undefined);
     }
-  }, [setVerseSelectorOpen, book, chapter, router]);
+  }, [setSelectedBookChapter, book, chapter, router]);
 
   if (!versionInfo) {
     return <Loader />;
@@ -74,7 +78,7 @@ const VerseSelector: React.FC<Props> = ({
         className="bg-gray-300 rounded px-2 py-0.5 whitespace-nowrap cursor-pointer"
         onClick={() => setVerseSelectorOpen(true)}
       >
-        {selectedChapter}
+        {selectedBook} {selectedChapter}
       </div>
       <Selector
         selected={selectedVersion}
@@ -82,7 +86,7 @@ const VerseSelector: React.FC<Props> = ({
         options={versions}
       />
       {verseSelectorOpen && (
-        <div className="absolute left-0 bottom-0 w-screen h-screen bg-white flex flex-col justify-between">
+        <div className="absolute z-[55] left-0 bottom-0 w-screen h-screen bg-white flex flex-col justify-between text-start">
           <div
             className={classNames(
               "overflow-scroll p-8",
@@ -97,7 +101,7 @@ const VerseSelector: React.FC<Props> = ({
               }}
             >
               <ArrowIcon className="fill-black rotate-90" />
-              Bible
+              Back
             </div>
             {!book &&
               (testament === "OT" ? versionInfo.OT : versionInfo.NT).map(

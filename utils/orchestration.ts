@@ -2,11 +2,12 @@ import { ChapterType, SearchPageType, VersionInfoType } from "./types";
 
 export const getText = async (
   book: string,
-  chapter: number
+  chapter: number,
+  version: string
 ): Promise<ChapterType | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/bible/?book=${book}&chapter=${chapter}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/bible/?book=${book}&chapter=${chapter}&version=${version}`,
       {
         method: "GET",
       }

@@ -3,6 +3,7 @@ export const Page = {
   NOTES: Symbol("Notes"),
   FEED: Symbol("Feed"),
   PROFILE: Symbol("Profile"),
+  GROWING_ROOTS: Symbol("GrowingRoots"),
 };
 
 export interface ChapterType {

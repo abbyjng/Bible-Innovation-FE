@@ -11,27 +11,28 @@ import { getText } from "@/utils/orchestration";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import HighlightPopup from "@/components/HighlightPopup";
+import BibleTextDisplay from "@/components/BibleTextDisplay";
 
 export default function Home() {
   const router = useRouter();
   const book = useRef<string>();
   const chapter = useRef<number>();
+  const version = useRef<string>();
 
   const [text, setText] = useState<ChapterType>();
-  const [selectedVerse, setSelectedVerse] = useState<VerseType>();
-  const [highlightPopupOpen, setHighlightPopupOpen] = useState<boolean>(false);
-  const [noteEditorOpen, setNoteEditorOpen] = useState<boolean>(false);
+  const [notes, setNotes] = useState<string[]>([]);
   const [highlights, setHighlights] = useState<string[]>([]);
-  const [scrollVerse, setScrollVerse] = useState<string>();
 
   const checkLocalStorage = () => {
     const storedBook = localStorage.getItem("book") as string;
     const storedChapter = getNumber(localStorage.getItem("chapter"));
+    const storedVersion = localStorage.getItem("version") as string;
 
     // if the stored book and chapter are the same as what's displayed, change nothing
     if (
       storedBook === book.current &&
-      getNumber(storedChapter) === chapter.current
+      getNumber(storedChapter) === chapter.current &&
+      storedVersion === version.current
     ) {
       return;
     }
@@ -39,11 +40,12 @@ export default function Home() {
     // if nothing was stored, go to Genesis 1
     book.current = storedBook || "Genesis";
     chapter.current = storedChapter || 1;
-    setNewText(book.current, chapter.current);
+    version.current = storedVersion || "NET";
+    setNewText(book.current, chapter.current, version.current);
   };
 
-  const setNewText = (book: string, chapter: number) => {
-    getText(book, chapter).then((text) => {
+  const setNewText = (book: string, chapter: number, version: string) => {
+    getText(book, chapter, version).then((text) => {
       if (!text) {
         router.push("500");
       } else if ("error" in text) {
@@ -52,9 +54,10 @@ export default function Home() {
         setText(text);
         setHighlights(Array(text.verses.length).fill(""));
 
-        // set localStorage to the current viewing book and chapter so that the next load will use the same chapter
+        // set localStorage to the current viewing book, chapter, and version so that the next load will use the same chapter
         localStorage.setItem("book", book);
         localStorage.setItem("chapter", `${chapter}`);
+        localStorage.setItem("version", version);
       }
     });
   };
@@ -62,27 +65,28 @@ export default function Home() {
   useEffect(() => {
     if (!router.isReady) return;
 
-    // when the page loads, check for url book and chapter, and use those if available
+    // when the page loads, check for url book, chapter, and version, and use those if available
     if (
       router.query?.book &&
       router.query?.chapter &&
+      router.query?.version &&
       ((router.query?.chapter as unknown as number) !== chapter.current ||
-        (router.query?.book as string) !== book.current)
+        (router.query?.book as string) !== book.current ||
+        (router.query?.version as string) !== version.current)
     ) {
       book.current = router.query?.book as string;
       chapter.current = router.query?.chapter as unknown as number;
-      setNewText(book.current, chapter.current);
-    } else if (!router.query?.book || !router.query?.chapter) {
-      // if the book or chapter is not defined in the url, check if there is a stored chapter
+      version.current = router.query?.version as string;
+      setNewText(book.current, chapter.current, version.current);
+    } else if (
+      !router.query?.book ||
+      !router.query?.chapter ||
+      !router.query?.version
+    ) {
+      // if the book, chapter, or version is not defined in the url, check if there is a stored chapter
       checkLocalStorage();
     }
   });
-
-  useEffect(() => {
-    if (text && router.query?.verse && router.query?.verse !== scrollVerse) {
-      setScrollVerse(router.query?.verse as string);
-    }
-  }, [text, router, scrollVerse]);
 
   if (!text) {
     return <Loader />;
@@ -94,80 +98,23 @@ export default function Home() {
         <MenuBar
           currentPage={Page.HOME}
           hasBibleSelector
-          selectedChapter={`${book.current} ${chapter.current}`}
-          selectedVersion={"NET"}
-          setSelectedVersion={(value) => {}}
+          selectedBook={book.current}
+          selectedChapter={chapter.current}
+          setSelectedBookChapter={(newBook, newChapter) => {
+            router.push(
+              `/?book=${newBook}&chapter=${newChapter}&version=${version.current}`
+            );
+          }}
+          selectedVersion={version.current}
+          setSelectedVersion={(newVersion) => {
+            router.push(
+              `/?book=${book.current}&chapter=${chapter.current}&version=${newVersion}`
+            );
+          }}
         />
       }
     >
-      <div className="h-full flex flex-col justify-between">
-        <div
-          className="p-4 overflow-scroll"
-          onClick={() => {
-            if (selectedVerse) {
-              setHighlightPopupOpen(false);
-              setNoteEditorOpen(false);
-              setSelectedVerse(undefined);
-            }
-          }}
-        >
-          <div className="text-xl font-bold my-4">
-            {text?.bookname} {text?.chapter}
-          </div>
-          <div>
-            {text?.verses.map((verse, index) => {
-              return (
-                <Verse
-                  key={Object.keys(verse)[0]}
-                  verse={verse}
-                  isSelected={selectedVerse === verse}
-                  setSelectedVerse={(verse) => {
-                    setSelectedVerse(verse);
-                    setNoteEditorOpen(false);
-                    setHighlightPopupOpen(true);
-                  }}
-                  highlight={highlights[index]}
-                  routerVerse={Object.keys(verse)[0] === scrollVerse}
-                />
-              );
-            })}
-          </div>
-        </div>
-        {noteEditorOpen && selectedVerse && (
-          <div className="w-full">
-            <NoteEditor
-              book={book.current || ""}
-              chapter={chapter.current || 0}
-              verse={selectedVerse}
-              content={""}
-              hideNoteEditor={() => {
-                setNoteEditorOpen(false);
-                setSelectedVerse(undefined);
-              }}
-            />
-          </div>
-        )}
-
-        {highlightPopupOpen && selectedVerse && (
-          <div className="w-full">
-            <HighlightPopup
-              book={book.current || ""}
-              chapter={chapter.current || 0}
-              verse={selectedVerse}
-              setHighlight={(highlight: string) => {
-                let newHighlights = highlights.map((h, i) =>
-                  `${i + 1}` === Object.keys(selectedVerse)[0] ? highlight : h
-                );
-                setHighlights(newHighlights);
-              }}
-              openNoteEditor={() => {
-                setNoteEditorOpen(true);
-                setHighlightPopupOpen(false);
-              }}
-            />
-          </div>
-        )}
-      </div>
+      <BibleTextDisplay text={text} />
     </PageLayout>
   );
 }
