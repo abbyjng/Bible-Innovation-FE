@@ -42,11 +42,11 @@ export default function Profile() {
               alt="profile picture"
             />
           )}
-          <p className="font-bold">{user.displayName}</p>
+          <p className="font-bold font-sans">{user.displayName}</p>
         </div>
 
         {/* User Statistics */}
-        <div className="text-center flex justify-between m-4">
+        <div className="text-center flex justify-between m-4 font-sans">
           <div>
             <p className="font-bold">{streak?.count}</p>
             <p>Streak</p>
@@ -63,12 +63,12 @@ export default function Profile() {
 
         {/* Habit Building */}
         <div>
-          <p className="font-bold text-center">growing roots sessions</p>
+          <p className="font-bold text-center font-sans">growing roots sessions</p>
           <p>progress bar goes here</p>
         </div>
 
         {/* Achievement Button */}
-        <div className="bg-gray-200 ml-4 mr-4 mt-4 mb-4 text-center">
+        <div className="bg-gray-200 ml-4 mr-4 mt-4 mb-4 text-center font-sans">
           <button>
             <p className="mt-2 mb-2">Achievements</p>
           </button>
@@ -76,7 +76,7 @@ export default function Profile() {
 
         {/* User Posts */}
         <div className="text-center">
-          <p className="font-bold mt-8 mb-8">Posts</p>
+          <p className="font-bold mt-8 mb-8 font-sans">Posts</p>
           <div className="flex mb-8 w-[200px] h-[200px]">
             <img
               src="https://www.thesprucepets.com/thmb/uQnGtOt9VQiML2oG2YzAmPErrHo=/5441x0/filters:no_upscale():strip_icc()/all-about-tabby-cats-552489-hero-a23a9118af8c477b914a0a1570d4f787.jpg"
@@ -86,7 +86,7 @@ export default function Profile() {
         </div>
 
         {/* Sign out button */}
-        <div className="text-center text-blue-600 mb-2">
+        <div className="text-center text-blue-600 mb-2 font-sans underline">
           <Link href="/signout">
             <p>Sign Out</p>
           </Link>

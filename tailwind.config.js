@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -15,6 +17,9 @@ module.exports = {
       },
       boxShadow: {
         DEFAULT: "0 3px 10px rgb(0,0,0,0.2)",
+      },
+      fontFamily: {
+        sans: ["'Noto Sans'", ...defaultTheme.fontFamily.sans],
       },
     },
   },

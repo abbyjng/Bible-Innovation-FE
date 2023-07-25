@@ -167,7 +167,7 @@ const MenuBar: React.FC<Props> = ({
       )}
       <div
         className={classNames(
-          "grid w-full bg-gray-200 items-center px-2 z-50 relative h-[50px]",
+          "grid w-full bg-[#657786] items-center px-2 z-50 relative h-[50px]",
           hasBibleSelector || timer ? "grid-cols-3" : "grid-cols-1"
         )}
       >
