@@ -9,9 +9,11 @@ import Image from "next/image";
 import DefaultImg from "../assets/default.png";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
+import { classNames, isNextDay } from "@/utils/helper";
 
 export default function Profile() {
-  const { loading, isAuthenticated, user, logout, streak } = useAuth();
+  const { loading, isAuthenticated, user, logout, streak, roots, updateRoots } =
+    useAuth();
 
   useEffect(() => {
     // checks if the user is authenticated
@@ -20,7 +22,16 @@ export default function Profile() {
     }
   }, [isAuthenticated, loading, logout]);
 
-  if (loading || !user) {
+  useEffect(() => {
+    if (roots && !loading) {
+      const status = isNextDay(roots.lastIncrement);
+      if (status === 1 || (status === 0 && roots.count >= 7)) {
+        updateRoots(0, 0);
+      }
+    }
+  });
+
+  if (loading || !user || !roots) {
     return <Loader />;
   }
 
@@ -63,8 +74,34 @@ export default function Profile() {
 
         {/* Habit Building */}
         <div>
-          <p className="font-bold text-center font-sans">growing roots sessions</p>
-          <p>progress bar goes here</p>
+          <p className="font-bold text-center font-sans">
+            growing roots sessions
+          </p>
+          <div className="flex justify-center w-full">
+            <div className="flex justify-center items-center max-w-[350px] w-full">
+              {Array.apply(null, Array(7)).map((_, index) => {
+                return (
+                  <>
+                    {index !== 0 && (
+                      <div
+                        className={classNames(
+                          "h-1 w-full",
+                          index < roots?.count ? "bg-[#74C95F]" : "bg-gray-200"
+                        )}
+                      />
+                    )}
+                    <div
+                      key={index}
+                      className={classNames(
+                        "rounded-full h-5 w-5 shrink-0",
+                        index < roots?.count ? "bg-[#74C95F]" : "bg-gray-200"
+                      )}
+                    />
+                  </>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Achievement Button */}

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
 import { ChapterType, Page } from "@/utils/types";
-import { getNumber } from "@/utils/helper";
+import { getNumber, isNextDay } from "@/utils/helper";
 import { getText, setStreak } from "@/utils/orchestration";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
@@ -85,24 +85,20 @@ export default function Home() {
     }
   });
 
+  useEffect(() => {
+    const now = new Date();
+    if (streak && !loading) {
+      const status = isNextDay(streak.lastIncrement);
+      if (status === 1) {
+        updateStreak(streak.count + 1, now.getTime());
+      } else if (status === 0) {
+        updateStreak(1, now.getTime());
+      }
+    }
+  });
+
   if (!text || loading) {
     return <Loader />;
-  }
-
-  if (streak) {
-    const now = new Date();
-    const lastIncrement = new Date(streak["last-increment"]);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    if (
-      yesterday.getDate() === lastIncrement.getDate() &&
-      yesterday.getMonth() === lastIncrement.getMonth() &&
-      yesterday.getFullYear() === lastIncrement.getFullYear()
-    ) {
-      updateStreak(streak.count + 1, now.getTime());
-    } else if (now.getTime() - lastIncrement.getTime() > 1000 * 60 * 60 * 48) {
-      updateStreak(1, now.getTime());
-    }
   }
 
   return (

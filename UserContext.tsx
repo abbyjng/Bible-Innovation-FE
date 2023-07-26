@@ -9,6 +9,7 @@ const UserContext = React.createContext({} as UserContextType);
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<UserType>();
   const [streak, setStreak] = useState<StreakType>();
+  const [roots, setRoots] = useState<StreakType>();
   const [token, setToken] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,7 +37,21 @@ export const AuthProvider = ({ children }: any) => {
             },
           }
         );
-        if (streak && streak.status === 200) setStreak(await streak.json());
+        if (streak && streak.status === 200) {
+          const jsonData = await streak.json();
+          setStreak({ ...jsonData, lastIncrement: jsonData["last-increment"] });
+        }
+
+        const roots = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roots`, {
+          method: "GET",
+          headers: {
+            user: cookieToken,
+          },
+        });
+        if (roots && roots.status === 200) {
+          const jsonData = await roots.json();
+          setRoots({ ...jsonData, count: jsonData.days });
+        }
       }
       setIsLoading(false);
     }
@@ -60,7 +75,21 @@ export const AuthProvider = ({ children }: any) => {
         user: token,
       },
     });
-    if (streak && streak.status === 200) setStreak(await streak.json());
+    if (streak && streak.status === 200) {
+      const jsonData = await streak.json();
+      setStreak({ ...jsonData, lastIncrement: jsonData["last-increment"] });
+    }
+
+    const roots = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roots`, {
+      method: "GET",
+      headers: {
+        user: token,
+      },
+    });
+    if (roots && roots.status === 200) {
+      const jsonData = await roots.json();
+      setRoots({ ...jsonData, count: jsonData.days });
+    }
   };
 
   const signUp = async (
@@ -106,7 +135,9 @@ export const AuthProvider = ({ children }: any) => {
         user: token as string,
         "streak-data": JSON.stringify({
           count: count,
-          lastIncrement: lastIncrement,
+          goal: 0,
+          "last-increment": lastIncrement,
+          period: "",
         }),
       },
     });
@@ -114,7 +145,28 @@ export const AuthProvider = ({ children }: any) => {
     if (result === "Success") {
       setStreak({
         count: count,
-        "last-increment": lastIncrement,
+        lastIncrement: lastIncrement,
+      });
+    }
+  };
+
+  const updateRoots = async (count: number, lastIncrement: number) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roots`, {
+      method: "POST",
+      headers: {
+        user: token as string,
+        "roots-data": JSON.stringify({
+          days: count,
+          startDate: 0,
+          lastIncrement: lastIncrement,
+        }),
+      },
+    });
+    const result = await response.text();
+    if (result === "Success") {
+      setRoots({
+        count: count,
+        lastIncrement: lastIncrement,
       });
     }
   };
@@ -126,10 +178,12 @@ export const AuthProvider = ({ children }: any) => {
         loading: isLoading,
         user,
         streak,
+        roots,
         signUp,
         login,
         logout,
         updateStreak,
+        updateRoots,
       }}
     >
       {children}

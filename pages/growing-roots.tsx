@@ -10,8 +10,10 @@ import VerseSelector from "@/components/VerseSelector";
 import { getText } from "@/utils/orchestration";
 import BibleTextDisplay from "@/components/BibleTextDisplay";
 import Countdown, { CountdownApi } from "react-countdown";
+import { isNextDay } from "@/utils/helper";
 
 export default function Notes() {
+  const [allowed, setAllowed] = useState<boolean>(false);
   const [minuteTens, setMinuteTens] = useState<number>(3);
   const [minuteOnes, setMinuteOnes] = useState<number>(0);
   const [book, setBook] = useState<string>("Genesis");
@@ -25,7 +27,8 @@ export default function Notes() {
   const minuteTensRef = useRef<any>();
   const minuteOnesRef = useRef<any>();
 
-  const { loading, isAuthenticated, user, logout } = useAuth();
+  const { loading, isAuthenticated, user, logout, roots, updateRoots } =
+    useAuth();
 
   useEffect(() => {
     if (minuteTensRef.current) {
@@ -35,13 +38,26 @@ export default function Notes() {
   });
 
   useEffect(() => {
+    if (roots && !loading) {
+      const status = isNextDay(roots.lastIncrement);
+      if (status === 1 || status === 0) {
+        setAllowed(true);
+        if (roots.count >= 7) {
+          // streak is full, reset
+          updateRoots(0, 0);
+        }
+      }
+    }
+  }, [loading, roots, updateRoots]);
+
+  useEffect(() => {
     // checks if the user is authenticated
     if (!loading && !isAuthenticated) {
       logout();
     }
   }, [isAuthenticated, loading, logout]);
 
-  if (loading || !user) {
+  if (loading || !user || !roots) {
     return <Loader />;
   }
 
@@ -52,7 +68,7 @@ export default function Notes() {
   const timerRenderer = ({ minutes, seconds, completed }: any) => {
     if (completed && text) {
       setSessionComplete(true);
-      // TODO: send info to backend
+      updateRoots(roots.count + 1, new Date().getTime());
     } else {
       return (
         <span>
@@ -88,12 +104,21 @@ export default function Notes() {
       menuBar={
         <MenuBar
           currentPage={Page.GROWING_ROOTS}
-          timer={sessionComplete ? undefined : countdown}
+          timer={sessionComplete || !allowed ? undefined : countdown}
           hasStartedSession={!!text}
         />
       }
     >
-      {!text && (
+      {!text && !allowed && (
+        <div className="bg-gray-100 m-6 p-4 flex flex-col gap-6 py-8 text-center">
+          <div className="font-bold text-xl">Growing Roots</div>
+          <div>
+            You&apos;ve already completed a session today. Come back tomorrow to
+            continue growing your roots.
+          </div>
+        </div>
+      )}
+      {!text && allowed && (
         <div className="bg-gray-100 m-6 p-4 flex flex-col gap-6 py-8 text-center">
           <div className="font-bold text-xl">Growing Roots</div>
           <div className="font-medium text-lg">Set time</div>

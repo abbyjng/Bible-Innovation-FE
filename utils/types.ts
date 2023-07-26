@@ -11,10 +11,12 @@ export interface UserContextType {
   loading: boolean;
   user?: UserType;
   streak?: StreakType;
+  roots?: StreakType;
   signUp: (displayName: string, email: string, password: string) => void;
   login: (email: string, password: string) => void;
   logout: () => void;
   updateStreak: (count: number, lastIncrement: number) => void;
+  updateRoots: (count: number, lastIncrement: number) => void;
 }
 
 export interface UserType {
@@ -25,7 +27,7 @@ export interface UserType {
 
 export interface StreakType {
   count: number;
-  "last-increment": number;
+  lastIncrement: number;
 }
 
 export interface ChapterType {
