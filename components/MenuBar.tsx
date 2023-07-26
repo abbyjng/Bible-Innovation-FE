@@ -57,18 +57,20 @@ const MenuBar: React.FC<Props> = ({
     }
   };
 
-  const pageAsIcon = (page: Symbol) => {
+  const pageAsIcon = (page: Symbol, black: boolean) => {
     switch (page) {
       case Page.HOME:
-        return <BookIcon className="fill-black" />;
+        return <BookIcon className={black ? "fill-black" : "fill-white"} />;
       case Page.NOTES:
-        return <CreateNoteIcon className="fill-black" />;
+        return (
+          <CreateNoteIcon className={black ? "fill-black" : "fill-white"} />
+        );
       case Page.FEED:
-        return <FeedIcon className="fill-black" />;
+        return <FeedIcon className={black ? "fill-black" : "fill-white"} />;
       case Page.PROFILE:
-        return <ProfileIcon className="fill-black" />;
+        return <ProfileIcon className={black ? "fill-black" : "fill-white"} />;
       case Page.GROWING_ROOTS:
-        return <RootsIcon className="fill-black" />;
+        return <RootsIcon className={black ? "fill-black" : "fill-white"} />;
       default:
         return "Page";
     }
@@ -87,7 +89,7 @@ const MenuBar: React.FC<Props> = ({
                   "w-full flex gap-10 px-9 py-4"
                 )}
               >
-                {pageAsIcon(Page.HOME)}
+                {pageAsIcon(Page.HOME, true)}
                 {pageAsString(Page.HOME)}
               </div>
             </Link>
@@ -98,7 +100,7 @@ const MenuBar: React.FC<Props> = ({
                   "w-full flex gap-10 px-9 py-4 justify-center"
                 )}
               >
-                {pageAsIcon(Page.GROWING_ROOTS)}
+                {pageAsIcon(Page.GROWING_ROOTS, true)}
                 {pageAsString(Page.GROWING_ROOTS)}
               </div>
             </Link>
@@ -110,7 +112,7 @@ const MenuBar: React.FC<Props> = ({
                   "w-full flex gap-10 px-9 py-4"
                 )}
               >
-                {pageAsIcon(Page.NOTES)}
+                {pageAsIcon(Page.NOTES, true)}
                 {pageAsString(Page.NOTES)}
               </div>
             </Link>
@@ -122,7 +124,7 @@ const MenuBar: React.FC<Props> = ({
                   "w-full flex gap-10 px-9 py-4"
                 )}
               >
-                {pageAsIcon(Page.FEED)}
+                {pageAsIcon(Page.FEED, true)}
                 {pageAsString(Page.FEED)}
               </div>
             </Link>
@@ -134,7 +136,7 @@ const MenuBar: React.FC<Props> = ({
                   "w-full flex gap-10 px-9 py-4"
                 )}
               >
-                {pageAsIcon(Page.PROFILE)}
+                {pageAsIcon(Page.PROFILE, true)}
                 {pageAsString(Page.PROFILE)}
               </div>
             </Link>
@@ -171,7 +173,9 @@ const MenuBar: React.FC<Props> = ({
           hasBibleSelector || timer ? "grid-cols-3" : "grid-cols-1"
         )}
       >
-        {timer && <div className="text-lg flex justify-center">{timer}</div>}
+        {timer && (
+          <div className="text-lg flex justify-center text-white">{timer}</div>
+        )}
         {hasBibleSelector &&
           selectedBook &&
           selectedChapter &&
@@ -195,9 +199,9 @@ const MenuBar: React.FC<Props> = ({
                 setNavigationOpen(!navigationOpen);
               }
             }}
-            className="cursor-pointer"
+            className="cursor-pointer !fill-white"
           >
-            {pageAsIcon(currentPage)}
+            {pageAsIcon(currentPage, false)}
           </div>
         </div>
         {hasBibleSelector && (
@@ -205,7 +209,7 @@ const MenuBar: React.FC<Props> = ({
             className="text-xl mt-2 mb-2 cursor-pointer justify-self-end"
             onClick={() => setSearchPageOpen(true)}
           >
-            <SearchIcon className="w-6 h-6" />
+            <SearchIcon className="w-6 h-6 stroke-white" />
           </div>
         )}
         {searchPageOpen && selectedVersion && (

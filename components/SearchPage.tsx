@@ -83,7 +83,7 @@ const SearchPage: React.FC<Props> = ({ version, hideSearchPage }) => {
             return (
               <div
                 key={index}
-                className="bg-gray-100 rounded p-4 flex items-center gap-3"
+                className="bg-gray-100 rounded p-4 flex items-center gap-3 cursor-pointer"
                 onClick={() => {
                   router.push(
                     `/?book=${searchResult.book}&chapter=${searchResult.chapter}&verse=${searchResult.verse}`

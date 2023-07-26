@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require('tailwindcss/defaultTheme')
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   content: [
@@ -20,6 +20,9 @@ module.exports = {
       },
       fontFamily: {
         sans: ["'Noto Sans'", ...defaultTheme.fontFamily.sans],
+      },
+      colors: {
+        slateGray: "#657786",
       },
     },
   },

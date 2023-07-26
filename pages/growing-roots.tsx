@@ -12,8 +12,6 @@ import BibleTextDisplay from "@/components/BibleTextDisplay";
 import Countdown, { CountdownApi } from "react-countdown";
 
 export default function Notes() {
-  // const [hour1, setHour1] = useState<number>(0);
-  // const [hour2, setHour2] = useState<number>(0);
   const [minuteTens, setMinuteTens] = useState<number>(3);
   const [minuteOnes, setMinuteOnes] = useState<number>(0);
   const [book, setBook] = useState<string>("Genesis");
@@ -24,8 +22,6 @@ export default function Notes() {
 
   let countdownApi: CountdownApi | null = null;
 
-  // const hour1Ref = useRef<any>();
-  // const hour2Ref = useRef<any>();
   const minuteTensRef = useRef<any>();
   const minuteOnesRef = useRef<any>();
 
@@ -102,53 +98,6 @@ export default function Notes() {
           <div className="font-bold text-xl">Growing Roots</div>
           <div className="font-medium text-lg">Set time</div>
           <div className="flex gap-2 items-center justify-center">
-            {/* <input
-            type="number"
-            value={hour1}
-            ref={hour1Ref}
-            maxLength={1}
-            onChange={(e) => {
-              const currVal = e.target.value as unknown as number;
-              if (!isNaN(currVal))
-                if (currVal > 9) {
-                  setHour1(9);
-                } else {
-                  setHour1(currVal);
-                }
-              else setHour1(0);
-              if (`${e.target.value}`.length === 1) {
-                hour2Ref.current.select();
-              }
-            }}
-            onBlur={(e) => {
-              if (e.target.value === "") setHour1(0);
-            }}
-            className="text-center text-[40px] p-2 w-[45px]"
-          />
-          <input
-            type="number"
-            value={hour2}
-            ref={hour2Ref}
-            maxLength={1}
-            onChange={(e) => {
-              const currVal = e.target.value as unknown as number;
-              if (!isNaN(currVal))
-                if (currVal > 9) {
-                  setHour2(9);
-                } else {
-                  setHour2(currVal);
-                }
-              else setHour2(0);
-              if (`${e.target.value}`.length === 1) {
-                minute1Ref.current.select();
-              }
-            }}
-            onBlur={(e) => {
-              if (e.target.value === "") setHour2(0);
-            }}
-            className="text-center text-[40px] p-2 w-[45px]"
-          />
-          <div className="text-[40px]">:</div> */}
             <input
               type="number"
               value={minuteTens}

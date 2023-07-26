@@ -75,7 +75,7 @@ const VerseSelector: React.FC<Props> = ({
   return (
     <div className="flex gap-2 justify-self-start overflow-scroll">
       <div
-        className="bg-gray-300 rounded px-2 py-0.5 whitespace-nowrap cursor-pointer"
+        className="bg-white rounded px-2 py-0.5 whitespace-nowrap cursor-pointer"
         onClick={() => setVerseSelectorOpen(true)}
       >
         {selectedBook} {selectedChapter}
@@ -111,7 +111,7 @@ const VerseSelector: React.FC<Props> = ({
                   return (
                     <div
                       key={index}
-                      className="w-full py-3.5"
+                      className="w-full py-3.5 cursor-pointer"
                       onClick={() => {
                         setBook(bookName);
                         setNumChapters(numChapters);
@@ -132,7 +132,7 @@ const VerseSelector: React.FC<Props> = ({
                 return (
                   <div
                     key={chapterNum}
-                    className="h-[65px] w-[65px] flex justify-center items-center"
+                    className="h-[65px] w-[65px] flex justify-center items-center cursor-pointer"
                     onClick={() => {
                       setChapter(chapterNum);
                     }}
@@ -142,35 +142,49 @@ const VerseSelector: React.FC<Props> = ({
                 );
               })}
           </div>
-          <div className="w-full flex justify-around p-5 shadow">
-            <div
-              className={classNames(testament === "OT" ? "font-bold" : "")}
-              onClick={() => {
-                setBook(undefined);
-                setTestament("OT");
-              }}
-            >
-              Old Testament
-            </div>
-            <div onClick={() => setSearchPageOpen(true)}>
-              <SearchIcon className="stroke-black h-5 w-5" />
-            </div>
-
-            <div
-              className={classNames(testament === "NT" ? "font-bold" : "")}
-              onClick={() => {
-                setBook(undefined);
-                setTestament("NT");
-              }}
-            >
-              New Testament
-            </div>
-            {searchPageOpen && selectedVersion && (
-              <SearchPage
-                version={selectedVersion}
-                hideSearchPage={() => setSearchPageOpen(false)}
-              />
+          <div className="w-full flex flex-col shadow">
+            {!book && (
+              <div className="w-full flex justify-around p-5">
+                <div
+                  className={classNames(
+                    testament === "OT" ? "font-bold" : "cursor-pointer"
+                  )}
+                  onClick={() => {
+                    setBook(undefined);
+                    setTestament("OT");
+                  }}
+                >
+                  Old Testament
+                </div>
+                <div
+                  onClick={() => setSearchPageOpen(true)}
+                  className="cursor-pointer"
+                >
+                  <SearchIcon className="stroke-black h-5 w-5" />
+                </div>
+                <div
+                  className={classNames(
+                    testament === "NT" ? "font-bold" : "cursor-pointer"
+                  )}
+                  onClick={() => {
+                    setBook(undefined);
+                    setTestament("NT");
+                  }}
+                >
+                  New Testament
+                </div>
+                {searchPageOpen && selectedVersion && (
+                  <SearchPage
+                    version={selectedVersion}
+                    hideSearchPage={() => setSearchPageOpen(false)}
+                  />
+                )}
+              </div>
             )}
+            <div className="w-full flex justify-around p-5 bg-slateGray text-white">
+              <div className={!book ? "font-bold" : ""}>Book</div>
+              <div className={book ? "font-bold" : ""}>Chapter</div>
+            </div>
           </div>
         </div>
       )}
