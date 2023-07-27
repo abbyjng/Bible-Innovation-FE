@@ -25,7 +25,7 @@ export default function Profile() {
   useEffect(() => {
     if (roots && !loading) {
       const status = isNextDay(roots.lastIncrement);
-      if (status === 1 || (status === 0 && roots.count >= 7)) {
+      if ((status === 1 || status === 0) && roots.count >= 7) {
         updateRoots(0, 0);
       }
     }
