@@ -6,7 +6,7 @@ import Selector from "./Selector";
 import SearchIcon from "./icons/SearchIcon";
 import { BOOKS, CHAPTER_COUNTS } from "../utils/constants";
 import BookIcon from "./icons/BookIcon";
-import CreateNoteIcon from "./icons/CreateNoteIcon";
+import NoteIcon from "./icons/NoteIcon";
 import FeedIcon from "./icons/FeedIcon";
 import ProfileIcon from "./icons/ProfileIcon";
 import SearchPage from "./SearchPage";
@@ -62,9 +62,7 @@ const MenuBar: React.FC<Props> = ({
       case Page.HOME:
         return <BookIcon className={black ? "fill-black" : "fill-white"} />;
       case Page.NOTES:
-        return (
-          <CreateNoteIcon className={black ? "fill-black" : "fill-white"} />
-        );
+        return <NoteIcon className={black ? "fill-black" : "fill-white"} />;
       case Page.FEED:
         return <FeedIcon className={black ? "fill-black" : "fill-white"} />;
       case Page.PROFILE:

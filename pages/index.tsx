@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
-import { ChapterType, Page } from "@/utils/types";
+import { ChapterType, NoteDataType, Page } from "@/utils/types";
 import { getNumber, isNextDay } from "@/utils/helper";
-import { getText } from "@/utils/orchestration";
+import { getChapterNotes, getText } from "@/utils/orchestration";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import BibleTextDisplay from "@/components/BibleTextDisplay";
@@ -18,8 +18,9 @@ export default function Home() {
   const version = useRef<string>();
 
   const [text, setText] = useState<ChapterType>();
+  const [notes, setNotes] = useState<NoteDataType[]>([]);
 
-  const { loading, user, streak, updateStreak } = useAuth();
+  const { loading, user, streak, updateStreak, token } = useAuth();
 
   const checkLocalStorage = () => {
     const storedBook = localStorage.getItem("book") as string;
@@ -42,9 +43,12 @@ export default function Home() {
     setNewText(book.current, chapter.current, version.current);
   };
 
-  const setNewText = (book: string, chapter: number, version: string) => {
-    getText(book, chapter, version).then((text) => {
+  const setNewText = async (book: string, chapter: number, version: string) => {
+    await getText(book, chapter, version).then((text) => {
       if (!text) {
+        localStorage.removeItem("book");
+        localStorage.removeItem("chapter");
+        localStorage.removeItem("version");
         router.push("500");
       } else if ("error" in text) {
         router.push("/");
@@ -58,6 +62,28 @@ export default function Home() {
       }
     });
   };
+
+  useEffect(() => {
+    if (token) {
+      getChapterNotes(
+        token,
+        book.current as string,
+        chapter.current as number
+      ).then((notes) => {
+        if (!notes) {
+          throw Error(`Couldn't fetch notes for ${book} ${chapter}`);
+        }
+        const newNotes: NoteDataType[] = Array.apply(
+          undefined,
+          Array(text?.verses.length)
+        ) as NoteDataType[];
+        notes.forEach((note) => {
+          newNotes[note.verse] = note;
+        });
+        setNotes(newNotes);
+      });
+    }
+  });
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -123,7 +149,7 @@ export default function Home() {
         />
       }
     >
-      <BibleTextDisplay text={text} loggedIn={!!user} />
+      <BibleTextDisplay text={text} loggedIn={!!user} notes={notes} />
     </PageLayout>
   );
 }

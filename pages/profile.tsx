@@ -148,7 +148,7 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Achievement Button */}
+        {/* Achievement Button -- temporarily removing while functionality is not possible */}
         {/* <div className="bg-gray-200 ml-4 mr-4 mt-4 mb-4 text-center font-sans">
           <button>
             <p className="mt-2 mb-2">Achievements</p>

@@ -50,6 +50,7 @@ const VerseSelector: React.FC<Props> = ({
       getVersionInfo(selectedVersion).then(
         (versionInfo: VersionInfoType | undefined) => {
           if (!versionInfo) {
+            localStorage.removeItem("version");
             router.push("500");
           } else {
             setVersionInfo(versionInfo);

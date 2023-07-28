@@ -47,6 +47,7 @@ export interface NoteDataType {
   chapter: number;
   verse: number;
   note: string;
+  created: number;
 }
 
 export interface SearchPageType {

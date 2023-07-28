@@ -83,14 +83,89 @@ export const getNotes = async (
   token: string
 ): Promise<NoteDataType[] | undefined> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/notes/?user=${token}`,
-      {
-        method: "GET",
-      }
-    );
-    const result = await response.json();
-    return result;
+    // const response = await fetch(
+    //   `${process.env.NEXT_PUBLIC_API_URL}/notes/?user=${token}`,
+    //   {
+    //     method: "GET",
+    //   }
+    // );
+    // const result = await response.json();
+    // return result;
+
+    const note = localStorage.getItem("noteSaveData");
+    if (note) {
+      return [
+        JSON.parse(note),
+        {
+          book: "Genesis",
+          chapter: 1,
+          verse: 5,
+          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+          created: 1690203083897,
+        },
+        {
+          book: "Genesis",
+          chapter: 1,
+          verse: 3,
+          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+          created: 1690101083897,
+        },
+        {
+          book: "Genesis",
+          chapter: 1,
+          verse: 10,
+          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+          created: 1690302083897,
+        },
+      ];
+    }
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+export const getChapterNotes = async (
+  token: string,
+  book: string,
+  chapter: number
+): Promise<NoteDataType[] | undefined> => {
+  try {
+    // const response = await fetch(
+    //   `${process.env.NEXT_PUBLIC_API_URL}/notes/?user=${token}&book=${book}&chapter=${chapter}`,
+    //   {
+    //     method: "GET",
+    //   }
+    // );
+    // const result = await response.json();
+    // return result;
+
+    const note = localStorage.getItem("noteSaveData");
+    if (note) {
+      return [
+        JSON.parse(note),
+        {
+          book: "Genesis",
+          chapter: 1,
+          verse: 5,
+          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+          created: 1690203083897,
+        },
+        {
+          book: "Genesis",
+          chapter: 1,
+          verse: 3,
+          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+          created: 1690101083897,
+        },
+        {
+          book: "Genesis",
+          chapter: 1,
+          verse: 10,
+          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+          created: 1690302083897,
+        },
+      ];
+    }
   } catch (e) {
     console.log("Error: ", e);
   }
@@ -126,6 +201,28 @@ export const getFollowedNotes = async (
       `${process.env.NEXT_PUBLIC_API_URL}/notes/followed/?user=${token}`,
       {
         method: "GET",
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+export const updateNote = async (
+  token: string,
+  noteData: NoteDataType
+): Promise<string | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/notes/update`,
+      {
+        method: "POST",
+        headers: {
+          user: token,
+          noteData: JSON.stringify(noteData),
+        },
       }
     );
     const result = await response.json();

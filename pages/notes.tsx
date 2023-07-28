@@ -7,10 +7,17 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
+import { getNotes, updateNote } from "@/utils/orchestration";
+import { useRouter } from "next/router";
+import NoteEditor from "@/components/NoteEditor";
 
 export default function Notes() {
   const [notes, setNotes] = useState<NoteDataType[]>([]);
-  const { loading, isAuthenticated, user, logout } = useAuth();
+  const [openNote, setOpenNote] = useState<NoteDataType>();
+
+  const { loading, isAuthenticated, user, logout, token } = useAuth();
+
+  const router = useRouter();
 
   useEffect(() => {
     // checks if the user is authenticated
@@ -21,75 +28,107 @@ export default function Notes() {
   }, [isAuthenticated, loading, logout]);
 
   useEffect(() => {
-    const note = localStorage.getItem("noteSaveData");
-    if (note) {
-      setNotes([JSON.parse(note)]);
+    if (!loading && token) {
+      getNotes(token).then((notes) => {
+        if (notes) {
+          setNotes(notes);
+        } else {
+          throw Error("Couldn't fetch notes.");
+        }
+      });
     }
-  }, [setNotes]);
+  }, [loading, token]);
 
-  if (loading || !user) {
+  if (loading || !user || !token) {
     return <Loader />;
   }
 
-  const getNotes = () => {
-    // TODO: connect to backend
-    return;
+  const handleSave = (
+    book: string,
+    chapter: number,
+    verse: number,
+    content: string
+  ) => {
+    const now = new Date().getTime();
+    const noteData: NoteDataType = {
+      book: book,
+      chapter: chapter,
+      verse: verse,
+      note: content,
+      created: now,
+    };
+    updateNote(token, noteData);
+
+    const newNotes = notes.map((note) => {
+      if (
+        note.book === book &&
+        note.chapter === chapter &&
+        note.verse === verse
+      ) {
+        return {
+          book: book,
+          chapter: chapter,
+          verse: verse,
+          note: content,
+          created: now,
+        };
+      } else {
+        return note;
+      }
+    });
+
+    setNotes(newNotes);
   };
 
   return (
     <PageLayout menuBar={<MenuBar currentPage={Page.NOTES} />}>
-      <div className="p-2 pb-20">
-        <div className="mt-7">
-          <div className="bg-gray-300 ml-4 inline-block w-20">
-            <a href="#" className="text-center">
-              <p className="py-2.5">Folder</p>
-            </a>
-          </div>
-
-          <div className="bg-gray-300 ml-4 inline-block w-20">
-            <a href="#" className="text-center">
-              <p className="py-2.5">Folder</p>
-            </a>
-          </div>
-
-          <div className="bg-gray-300 ml-4 inline-block w-20">
-            <a href="#" className="text-center">
-              <p className="py-2.5">Folder</p>
-            </a>
-          </div>
-
-          <div className="m-4">
-            {notes.map((note, index) => {
-              return (
-                <div className="p-4 bg-gray-200 rounded" key={index}>
-                  <div className="mb-2 text-lg font-bold">
+      {openNote && (
+        <div className="z-[100] absolute flex flex-col justify-end w-screen h-screen bg-white">
+          <NoteEditor
+            book={openNote.book}
+            chapter={openNote.chapter}
+            verse={openNote.verse}
+            content={openNote.note}
+            height="70vh"
+            hideNoteEditor={() => {
+              setOpenNote(undefined);
+            }}
+            handleSave={handleSave}
+          />
+        </div>
+      )}
+      <div className="p-2 pb-20 mt-7">
+        <div className="m-4 flex flex-wrap gap-4 justify-around">
+          {notes.map((note, index) => {
+            return (
+              <div className="w-[175px] flex flex-col" key={index}>
+                <div
+                  className="flex flex-col gap-2 p-4 border border-black mb-2 h-full cursor-pointer"
+                  dangerouslySetInnerHTML={{ __html: note.note }}
+                  onClick={() => setOpenNote(note)}
+                />
+                <div className="flex flex-wrap justify-between mb-2 ">
+                  <div
+                    className="cursor-pointer"
+                    onClick={() =>
+                      router.push(
+                        `/?book=${note.book}&chapter=${note.chapter}&verse=${
+                          note.verse
+                        }&version=${
+                          (localStorage.getItem("version") as string) || "NET"
+                        }`
+                      )
+                    }
+                  >
                     {note.book} {note.chapter}:{note.verse}
                   </div>
-                  <div
-                    className="flex flex-col gap-2"
-                    dangerouslySetInnerHTML={{ __html: note.note }}
-                  />
+                  <div className="text-gray-400">
+                    {new Date(note.created).toLocaleDateString()}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-
-          <h3 className="ml-4 text-xl font-bold">Shared Notes</h3>
-          <div className="m-4">
-            <ul>
-              <li className="border-b-4 border-black">
-                <a href="#">
-                  <p className="mb-2">Note Title</p>
-                </a>
-              </li>
-
-              <li className="border-b-4 border-black">
-                <a href="#">
-                  <p className="mt-2 mb-2">Note Title</p>
-                </a>
-              </li>
-            </ul>
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </PageLayout>

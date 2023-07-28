@@ -1,4 +1,4 @@
-import { ChapterType, VerseType } from "@/utils/types";
+import { ChapterType, NoteDataType, VerseType } from "@/utils/types";
 import React, { useEffect, useState } from "react";
 import Verse from "./Verse";
 import NoteEditor from "./NoteEditor";
@@ -7,14 +7,18 @@ import { useRouter } from "next/router";
 
 interface Props {
   text: ChapterType;
+  notes: NoteDataType[];
   loggedIn?: boolean;
 }
 
-const BibleTextDisplay: React.FC<Props> = ({ text, loggedIn = true }) => {
+const BibleTextDisplay: React.FC<Props> = ({
+  text,
+  notes,
+  loggedIn = true,
+}) => {
   const [selectedVerse, setSelectedVerse] = useState<VerseType>();
   const [highlightPopupOpen, setHighlightPopupOpen] = useState<boolean>(false);
   const [noteEditorOpen, setNoteEditorOpen] = useState<boolean>(false);
-  const [notes, setNotes] = useState<string[]>([]);
   const [highlights, setHighlights] = useState<string[]>([]);
   const [scrollVerse, setScrollVerse] = useState<string>();
 
@@ -31,6 +35,23 @@ const BibleTextDisplay: React.FC<Props> = ({ text, loggedIn = true }) => {
       setHighlights(Array(text.verses.length).fill(""));
     }
   }, [text]);
+
+  const handleSaveNote = (
+    book: string,
+    chapter: number,
+    verse: number,
+    content: string
+  ) => {
+    const noteData: NoteDataType = {
+      book: book,
+      chapter: chapter,
+      verse: verse,
+      note: content,
+      created: new Date().getTime(),
+    };
+    const jsonData = JSON.stringify(noteData, null, 2);
+    localStorage.setItem("noteSaveData", jsonData);
+  };
 
   return (
     <div className="h-full flex flex-col justify-between">
@@ -61,6 +82,7 @@ const BibleTextDisplay: React.FC<Props> = ({ text, loggedIn = true }) => {
                 }}
                 highlight={highlights[index]}
                 routerVerse={Object.keys(verse)[0] === scrollVerse}
+                hasNote={!!notes[Object.keys(verse)[0] as unknown as number]}
               />
             );
           })}
@@ -71,12 +93,16 @@ const BibleTextDisplay: React.FC<Props> = ({ text, loggedIn = true }) => {
           <NoteEditor
             book={text.bookname}
             chapter={text.chapter || 0}
-            verse={selectedVerse}
-            content={""}
+            verse={Object.keys(selectedVerse)[0] as unknown as number}
+            content={
+              notes[Object.keys(selectedVerse)[0] as unknown as number].note ||
+              ""
+            }
             hideNoteEditor={() => {
               setNoteEditorOpen(false);
               setSelectedVerse(undefined);
             }}
+            handleSave={handleSaveNote}
           />
         </div>
       )}
@@ -96,6 +122,9 @@ const BibleTextDisplay: React.FC<Props> = ({ text, loggedIn = true }) => {
               setNoteEditorOpen(true);
               setHighlightPopupOpen(false);
             }}
+            hasNote={
+              !!notes[Object.keys(selectedVerse)[0] as unknown as number]
+            }
           />
         </div>
       )}

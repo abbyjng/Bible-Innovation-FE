@@ -7,9 +7,16 @@ import { textOptions } from "@/utils/constants";
 interface Props {
   book: string;
   chapter: number;
-  verse: VerseType;
+  verse: number;
   content: string;
+  height?: string;
   hideNoteEditor: () => void;
+  handleSave: (
+    book: string,
+    chapter: number,
+    verse: number,
+    content: string
+  ) => void;
 }
 
 const NoteEditor: React.FC<Props> = ({
@@ -17,26 +24,21 @@ const NoteEditor: React.FC<Props> = ({
   chapter,
   verse,
   content,
+  height,
   hideNoteEditor,
+  handleSave,
 }) => {
   const editorRef = useRef<any>();
 
   const [saveDisabled, setSaveDisabled] = useState<boolean>(true);
 
-  const saveData = (content: string) => {
-    const noteData: NoteDataType = {
-      book: book,
-      chapter: chapter,
-      verse: Object.keys(verse)[0] as unknown as number,
-      note: content,
-    };
-    const jsonData = JSON.stringify(noteData, null, 2);
-    localStorage.setItem("noteSaveData", jsonData);
-    hideNoteEditor();
-  };
-
   return (
-    <div className="flex flex-col justify-end bg-white px-4 py-2 gap-4 shadow relative">
+    <div
+      className={classNames(
+        "flex flex-col justify-end bg-white px-4 py-2 gap-4 relative",
+        height ? "" : "shadow"
+      )}
+    >
       <Editor
         apiKey={process.env.NEXT_PUBLIC_TINY_API_KEY}
         onInit={(_, editor) => (editorRef.current = editor)}
@@ -45,7 +47,7 @@ const NoteEditor: React.FC<Props> = ({
         }}
         initialValue={content}
         init={{
-          height: "40vh",
+          height: height ? height : "40vh",
           menubar: "false",
           toolbar: "bold italic backcolor alignleft alignright | help",
           content_style:
@@ -66,7 +68,8 @@ const NoteEditor: React.FC<Props> = ({
         )}
         onClick={() => {
           if (!saveDisabled) {
-            saveData(editorRef.current.getContent());
+            handleSave(book, chapter, verse, editorRef.current.getContent());
+            hideNoteEditor();
           }
         }}
       >

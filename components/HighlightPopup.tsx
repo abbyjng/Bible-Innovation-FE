@@ -10,6 +10,7 @@ interface Props {
   verse: VerseType;
   setHighlight: (highlight: string) => void;
   openNoteEditor: () => void;
+  hasNote: boolean;
 }
 
 const HighlightPopup: React.FC<Props> = ({
@@ -18,6 +19,7 @@ const HighlightPopup: React.FC<Props> = ({
   verse,
   setHighlight,
   openNoteEditor,
+  hasNote,
 }) => {
   const saveHighlight = (highlight: string) => {
     // TODO: save highlight data to backend
@@ -43,7 +45,7 @@ const HighlightPopup: React.FC<Props> = ({
         onClick={openNoteEditor}
       >
         <CreateNoteIcon className="fill-black" />
-        New Note
+        {hasNote ? "Edit Note" : "New Note"}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { VerseType } from "../utils/types";
 import { classNames } from "@/utils/helper";
+import VerseNoteIcon from "./icons/VerseNoteIcon";
 
 interface Props {
   verse: VerseType;
@@ -8,6 +9,7 @@ interface Props {
   setSelectedVerse?: (verse: VerseType) => void;
   highlight?: string;
   routerVerse: boolean;
+  hasNote: boolean;
 }
 
 const Verse: React.FC<Props> = ({
@@ -16,6 +18,7 @@ const Verse: React.FC<Props> = ({
   setSelectedVerse,
   highlight,
   routerVerse,
+  hasNote,
 }) => {
   const number = Object.keys(verse)[0];
   const text = verse[number];
@@ -49,6 +52,7 @@ const Verse: React.FC<Props> = ({
           : "bg-[#c4ecff]/0"
       )}
     >
+      {hasNote && <VerseNoteIcon className="fill-[#208906] inline" />}
       <span className="text-xs px-1 align-text-top">{number}</span>
       <span>{text}</span>
     </span>
