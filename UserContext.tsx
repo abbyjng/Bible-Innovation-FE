@@ -117,6 +117,9 @@ export const AuthProvider = ({ children }: any) => {
         password: password,
       },
     });
+    if (response.status !== 200) {
+      throw Error("Incorrect credentials");
+    }
     const token = await response.text();
     setTokenAndUser(token);
   };

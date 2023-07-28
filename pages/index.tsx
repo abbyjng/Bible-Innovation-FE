@@ -19,7 +19,7 @@ export default function Home() {
 
   const [text, setText] = useState<ChapterType>();
 
-  const { loading, streak, updateStreak } = useAuth();
+  const { loading, user, streak, updateStreak } = useAuth();
 
   const checkLocalStorage = () => {
     const storedBook = localStorage.getItem("book") as string;
@@ -123,7 +123,7 @@ export default function Home() {
         />
       }
     >
-      <BibleTextDisplay text={text} />
+      <BibleTextDisplay text={text} loggedIn={!!user} />
     </PageLayout>
   );
 }

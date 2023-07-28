@@ -18,6 +18,7 @@ export default function Profile() {
   useEffect(() => {
     // checks if the user is authenticated
     if (!loading && !isAuthenticated) {
+      localStorage.setItem("nextPage", "/profile");
       logout();
     }
   }, [isAuthenticated, loading, logout]);

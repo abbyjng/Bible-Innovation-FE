@@ -37,8 +37,8 @@ const Verse: React.FC<Props> = ({
       }}
       id={number}
       className={classNames(
+        "scroll-m-10 cursor-pointer",
         isSelected ? "underline" : "",
-        "scroll-m-10",
         highlight
           ? highlight
           : "transition-[background-color] delay-[1000ms] duration-300",

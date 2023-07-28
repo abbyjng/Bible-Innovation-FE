@@ -7,9 +7,10 @@ import { useRouter } from "next/router";
 
 interface Props {
   text: ChapterType;
+  loggedIn?: boolean;
 }
 
-const BibleTextDisplay: React.FC<Props> = ({ text }) => {
+const BibleTextDisplay: React.FC<Props> = ({ text, loggedIn = true }) => {
   const [selectedVerse, setSelectedVerse] = useState<VerseType>();
   const [highlightPopupOpen, setHighlightPopupOpen] = useState<boolean>(false);
   const [noteEditorOpen, setNoteEditorOpen] = useState<boolean>(false);
@@ -79,8 +80,7 @@ const BibleTextDisplay: React.FC<Props> = ({ text }) => {
           />
         </div>
       )}
-
-      {highlightPopupOpen && selectedVerse && (
+      {highlightPopupOpen && selectedVerse && loggedIn && (
         <div className="w-full">
           <HighlightPopup
             book={text.bookname || ""}
@@ -97,6 +97,14 @@ const BibleTextDisplay: React.FC<Props> = ({ text }) => {
               setHighlightPopupOpen(false);
             }}
           />
+        </div>
+      )}
+      {highlightPopupOpen && selectedVerse && !loggedIn && (
+        <div
+          className="w-full shadow text-center p-4 cursor-pointer"
+          onClick={() => router.push("/signin")}
+        >
+          <span className="underline">Login</span> to save highlights and notes
         </div>
       )}
     </div>

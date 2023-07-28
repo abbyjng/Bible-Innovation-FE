@@ -94,7 +94,7 @@ const VerseSelector: React.FC<Props> = ({
             )}
           >
             <div
-              className="flex gap-3 items-center mb-6 w-full"
+              className="flex gap-3 items-center mb-6 w-full cursor-pointer"
               onClick={() => {
                 setBook(undefined);
                 setVerseSelectorOpen(false);

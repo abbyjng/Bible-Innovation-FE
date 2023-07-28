@@ -18,6 +18,7 @@ export default function Feed() {
   useEffect(() => {
     // checks if the user is authenticated
     if (!loading && !isAuthenticated) {
+      localStorage.setItem("nextPage", "/feed");
       logout();
     }
   }, [isAuthenticated, loading, logout]);

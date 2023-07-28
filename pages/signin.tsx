@@ -2,31 +2,49 @@
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/UserContext";
+import Loader from "@/components/Loader";
 
 export default function Signin() {
   const router = useRouter();
 
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
 
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
+      setSubmitting(true);
       await login(email, password);
-      router.push("/");
     } catch (error) {
+      setSubmitting(false);
       setError(true);
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      const nextPage = localStorage.getItem("nextPage");
+      localStorage.removeItem("nextPage");
+      if (nextPage) {
+        router.push(nextPage);
+      } else router.push("/");
+    }
+  }, [user, router]);
+
   return (
     <div>
+      {submitting && (
+        <div className="w-screen h-screen bg-black/20 absolute top-0 left-0">
+          <Loader />
+        </div>
+      )}
       <div className="text-center text-xl font-bold mt-10">Login</div>
       <form onSubmit={handleSubmit} className="flex flex-col p-4">
         {error && (
@@ -58,7 +76,11 @@ export default function Signin() {
             setError(false);
           }}
         />
-        <input type="submit" value="Submit" className="bg-gray-200 p-2 mt-2" />
+        <input
+          type="submit"
+          value="Submit"
+          className="bg-gray-200 p-2 mt-2 cursor-pointer"
+        />
       </form>
       <div className="flex justify-center">
         <Link href="/signup" className="underline">

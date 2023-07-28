@@ -15,6 +15,7 @@ export default function Notes() {
   useEffect(() => {
     // checks if the user is authenticated
     if (!loading && !isAuthenticated) {
+      localStorage.setItem("nextPage", "/notes");
       logout();
     }
   }, [isAuthenticated, loading, logout]);

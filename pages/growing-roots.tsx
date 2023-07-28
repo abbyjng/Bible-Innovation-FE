@@ -53,6 +53,7 @@ export default function Notes() {
   useEffect(() => {
     // checks if the user is authenticated
     if (!loading && !isAuthenticated) {
+      localStorage.setItem("nextPage", "/growing-roots");
       logout();
     }
   }, [isAuthenticated, loading, logout]);
