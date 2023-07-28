@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
 import { ChapterType, Page } from "@/utils/types";
 import { getNumber, isNextDay } from "@/utils/helper";
-import { getText, setStreak } from "@/utils/orchestration";
+import { getText } from "@/utils/orchestration";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import BibleTextDisplay from "@/components/BibleTextDisplay";

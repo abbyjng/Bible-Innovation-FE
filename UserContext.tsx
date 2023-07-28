@@ -2,7 +2,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import { UserContextType, StreakType, UserType } from "./utils/types";
+import {
+  UserContextType,
+  StreakType,
+  UserType,
+  NoteDataType,
+} from "./utils/types";
 
 const UserContext = React.createContext({} as UserContextType);
 
@@ -174,11 +179,31 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
+  const updateUser = async (displayName: string, photoURL: string) => {
+    if (!user) return;
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/update-profile`,
+      {
+        method: "POST",
+        headers: {
+          user: token as string,
+          displayName: displayName,
+          photoURL: photoURL,
+        },
+      }
+    );
+    const result = await response.text();
+    if (result === "Success") {
+      setUser({ ...user, displayName: displayName, photoURL: photoURL });
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
         isAuthenticated: !!user,
         loading: isLoading,
+        token,
         user,
         streak,
         roots,
@@ -187,6 +212,7 @@ export const AuthProvider = ({ children }: any) => {
         logout,
         updateStreak,
         updateRoots,
+        updateUser,
       }}
     >
       {children}

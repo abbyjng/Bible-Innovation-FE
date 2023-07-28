@@ -39,7 +39,7 @@ const HighlightPopup: React.FC<Props> = ({
       </div>
       <div className="h-px bg-black" />
       <div
-        className="flex justify-center gap-3 items-center"
+        className="flex justify-center gap-3 items-center cursor-pointer"
         onClick={openNoteEditor}
       >
         <CreateNoteIcon className="fill-black" />

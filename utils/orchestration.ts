@@ -1,5 +1,6 @@
 import {
   ChapterType,
+  NoteDataType,
   SearchPageType,
   StreakType,
   VersionInfoType,
@@ -78,18 +79,55 @@ export const getVersions = async (): Promise<string[] | undefined> => {
   }
 };
 
-export const setStreak = async (
-  jwt: string,
-  streakData: StreakType
-): Promise<ChapterType | undefined> => {
+export const getNotes = async (
+  token: string
+): Promise<NoteDataType[] | undefined> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/streak`, {
-      method: "GET",
-      headers: {
-        user: jwt,
-        "streak-data": JSON.stringify(streakData),
-      },
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/notes/?user=${token}`,
+      {
+        method: "GET",
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+export const createNote = async (
+  token: string,
+  noteData: NoteDataType
+): Promise<string | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/notes/create`,
+      {
+        method: "POST",
+        headers: {
+          user: token,
+          noteData: JSON.stringify(noteData),
+        },
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+export const getFollowedNotes = async (
+  token: string
+): Promise<NoteDataType[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/notes/followed/?user=${token}`,
+      {
+        method: "GET",
+      }
+    );
     const result = await response.json();
     return result;
   } catch (e) {

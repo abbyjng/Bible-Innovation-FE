@@ -59,8 +59,10 @@ const NoteEditor: React.FC<Props> = ({
       />
       <div
         className={classNames(
-          "w-full bg-gray-200 text-center rounded p-4 text-lg mb-4 bg-gray-200",
-          saveDisabled ? "text-gray-400" : "cursor-pointer"
+          "w-full text-center rounded p-4 text-lg mb-4",
+          saveDisabled
+            ? "text-gray-300 bg-slateGray/80"
+            : "cursor-pointer text-white bg-slateGray"
         )}
         onClick={() => {
           if (!saveDisabled) {

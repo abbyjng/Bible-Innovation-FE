@@ -9,6 +9,7 @@ export const Page = {
 export interface UserContextType {
   isAuthenticated: boolean;
   loading: boolean;
+  token?: string;
   user?: UserType;
   streak?: StreakType;
   roots?: StreakType;
@@ -17,6 +18,7 @@ export interface UserContextType {
   logout: () => void;
   updateStreak: (count: number, lastIncrement: number) => void;
   updateRoots: (count: number, lastIncrement: number) => void;
+  updateUser: (displayName: string, photoURL: string) => void;
 }
 
 export interface UserType {

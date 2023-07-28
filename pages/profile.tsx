@@ -12,8 +12,20 @@ import PageLayout from "@/components/PageLayout";
 import { classNames, isNextDay } from "@/utils/helper";
 
 export default function Profile() {
-  const { loading, isAuthenticated, user, logout, streak, roots, updateRoots } =
-    useAuth();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [displayName, setDisplayName] = useState<string>("");
+  const [photoURL, setPhotoURL] = useState<string>("");
+
+  const {
+    loading,
+    isAuthenticated,
+    user,
+    logout,
+    streak,
+    roots,
+    updateRoots,
+    updateUser,
+  } = useAuth();
 
   useEffect(() => {
     // checks if the user is authenticated
@@ -39,12 +51,25 @@ export default function Profile() {
   return (
     <PageLayout menuBar={<MenuBar currentPage={Page.PROFILE} />}>
       <div className="p-2 pb-20">
+        <div
+          className="absolute top-4 right-4 bg-gray-200 py-3 px-4 cursor-pointer rounded"
+          onClick={async () => {
+            if (isEditing) {
+              await updateUser(displayName, photoURL);
+            } else {
+              setDisplayName(user.displayName);
+            }
+            setIsEditing(!isEditing);
+          }}
+        >
+          {isEditing ? "Save" : "Edit"}
+        </div>
         {/* Profile Picture and Username */}
         <div className="text-center">
           {user.photoURL ? (
             <Image
               className="mx-auto w-[100px] h-[100px] mt-2"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvCW6gQaavw2toeF-2b5V6YCFvq4Kpip5ivQ&usqp=CAU"
+              src={user.photoURL}
               alt="profile picture"
             />
           ) : (
@@ -54,7 +79,18 @@ export default function Profile() {
               alt="profile picture"
             />
           )}
-          <p className="font-bold font-sans">{user.displayName}</p>
+          {isEditing ? (
+            <input
+              className="border border-black p-1"
+              autoFocus
+              value={displayName}
+              onChange={(e) => {
+                setDisplayName(e.target.value);
+              }}
+            />
+          ) : (
+            <p className="font-bold font-sans">{user.displayName}</p>
+          )}
         </div>
 
         {/* User Statistics */}
@@ -74,7 +110,7 @@ export default function Profile() {
         </div>
 
         {/* Habit Building */}
-        <div>
+        <div className="flex flex-col gap-5">
           <p className="font-bold text-center font-sans">
             growing roots sessions
           </p>
@@ -84,20 +120,27 @@ export default function Profile() {
                 return (
                   <>
                     {index !== 0 && (
+                      <div className="w-full">
+                        <div
+                          className={classNames(
+                            "h-1",
+                            index < roots?.count
+                              ? "bg-[#74C95F]"
+                              : "bg-gray-200"
+                          )}
+                        />
+                        <div className="text-transparent">1</div>
+                      </div>
+                    )}
+                    <div>
                       <div
                         className={classNames(
-                          "h-1 w-full",
+                          "rounded-full h-5 w-5 shrink-0",
                           index < roots?.count ? "bg-[#74C95F]" : "bg-gray-200"
                         )}
                       />
-                    )}
-                    <div
-                      key={index}
-                      className={classNames(
-                        "rounded-full h-5 w-5 shrink-0",
-                        index < roots?.count ? "bg-[#74C95F]" : "bg-gray-200"
-                      )}
-                    />
+                      <div className="text-center">{index + 1}</div>
+                    </div>
                   </>
                 );
               })}
@@ -106,11 +149,11 @@ export default function Profile() {
         </div>
 
         {/* Achievement Button */}
-        <div className="bg-gray-200 ml-4 mr-4 mt-4 mb-4 text-center font-sans">
+        {/* <div className="bg-gray-200 ml-4 mr-4 mt-4 mb-4 text-center font-sans">
           <button>
             <p className="mt-2 mb-2">Achievements</p>
           </button>
-        </div>
+        </div> */}
 
         {/* User Posts */}
         <div className="text-center">
