@@ -63,7 +63,7 @@ export default function Signup() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <input type="submit" value="Submit" className="bg-gray-200 p-2 mt-2" />
+        <input type="submit" value="Submit" className="bg-[#657786] text-white p-2 mt-2" />
       </form>
       <div className="flex justify-center">
         <Link href="/signin" className="underline">

@@ -79,7 +79,7 @@ export default function Signin() {
         <input
           type="submit"
           value="Submit"
-          className="bg-gray-200 p-2 mt-2 cursor-pointer"
+          className="bg-[#657786] text-white p-2 mt-2 cursor-pointer"
         />
       </form>
       <div className="flex justify-center">

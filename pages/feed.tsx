@@ -44,16 +44,16 @@ export default function Feed() {
           ></img>
           <div className="bg-slateGray">
             <div className="flex pt-[5px] pl-[5px]">
-              <ProfileIcon className="fill-black" />
-              <p className="ml-3 text-base font-sans">Noto Sans</p>
-              <div className="flex pl-[165px]">
-                <HeartIcon className="fill-black" />
-                <CommentIcon className="fill-black" />
-                <BookmarkIcon className="fill-black" />
+              <ProfileIcon className="fill-white" />
+              <p className="ml-3 text-base font-sans text-white">CatsAreCool78</p>
+              <div className="flex pl-[135px]">
+                <HeartIcon className="stroke-white w-6 h-6 mr-2" />
+                <CommentIcon className="stroke-white w-6 h-6 ml-2 mr-2" />
+                <BookmarkIcon className="stroke-white w-6 h-6 ml-2" />
               </div>
             </div>
             <div className="flex">
-              <p className="ml-3">|</p>
+              <p className="ml-3 text-white">|</p>
               <p className="text-zinc-400 ml-2 text-base font-sans">
                 View Thread
               </p>
@@ -70,16 +70,16 @@ export default function Feed() {
             ></img>
             <div className="bg-slateGray">
               <div className="flex pt-[5px] pl-[5px]">
-                <ProfileIcon className="fill-black" />
-                <p className="ml-3 text-base font-sans">Noto Sans</p>
-                <div className="flex pl-[165px]">
-                  <HeartIcon className="fill-black" />
-                  <CommentIcon className="fill-black" />
-                  <BookmarkIcon className="fill-black" />
+                <ProfileIcon className="fill-white" />
+                <p className="ml-3 text-base font-sans text-white">Nemo</p>
+                <div className="flex pl-[195px]">
+                  <HeartIcon className="stroke-white w-6 h-6 mr-2" />
+                  <CommentIcon className="stroke-white w-6 h-6 ml-2 mr-2" />
+                  <BookmarkIcon className="stroke-white w-6 h-6 ml-2" />
                 </div>
               </div>
               <div className="flex">
-                <p className="ml-3">|</p>
+                <p className="ml-3 text-white font-sans text-base">|</p>
                 <p className="text-zinc-400 ml-2 text-base font-sans">
                   View Thread
                 </p>
@@ -97,16 +97,16 @@ export default function Feed() {
             ></img>
             <div className="bg-slateGray">
               <div className="flex pt-[5px] pl-[5px]">
-                <ProfileIcon className="fill-black" />
-                <p className="ml-3 text-base font-sans">Noto Sans</p>
+                <ProfileIcon className="fill-white" />
+                <p className="ml-3 text-base font-sans text-white">DogFan20</p>
                 <div className="flex pl-[165px]">
-                  <HeartIcon className="fill-black" />
-                  <CommentIcon className="fill-black" />
-                  <BookmarkIcon className="fill-black" />
+                  <HeartIcon className="stroke-white w-6 h-6 mr-2" />
+                  <CommentIcon className="stroke-white w-6 h-6 ml-2 mr-2" />
+                  <BookmarkIcon className="stroke-white w-6 h-6 ml-2" />
                 </div>
               </div>
               <div className="flex">
-                <p className="ml-3">|</p>
+                <p className="ml-3 text-white">|</p>
                 <p className="text-zinc-400 ml-2 text-base font-sans">
                   View Thread
                 </p>
