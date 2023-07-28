@@ -10,7 +10,7 @@ const CommentIcon: React.FC<Props> = ({ className }) => {
           viewBox="0 0 24 24" 
           strokeWidth={1.5} 
           stroke="currentColor" 
-          className="w-6 h-6 ml-2 mr-2"
+          className={className}
         >
             <path 
               strokeLinecap="round" 
