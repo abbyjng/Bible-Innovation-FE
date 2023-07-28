@@ -7,7 +7,7 @@ import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import VerseSelector from "@/components/VerseSelector";
-import { getText } from "@/utils/orchestration";
+import { getChapterNotes, getText } from "@/utils/orchestration";
 import BibleTextDisplay from "@/components/BibleTextDisplay";
 import Countdown, { CountdownApi } from "react-countdown";
 import { isNextDay } from "@/utils/helper";
@@ -20,6 +20,7 @@ export default function Notes() {
   const [chapter, setChapter] = useState<number>(1);
   const [version, setVersion] = useState<string>("NET");
   const [text, setText] = useState<ChapterType>();
+  const [notes, setNotes] = useState<NoteDataType[]>([]);
   const [sessionComplete, setSessionComplete] = useState<boolean>(false);
 
   let countdownApi: CountdownApi | null = null;
@@ -27,7 +28,7 @@ export default function Notes() {
   const minuteTensRef = useRef<any>();
   const minuteOnesRef = useRef<any>();
 
-  const { loading, isAuthenticated, user, logout, roots, updateRoots } =
+  const { loading, isAuthenticated, user, logout, roots, updateRoots, token } =
     useAuth();
 
   useEffect(() => {
@@ -57,6 +58,24 @@ export default function Notes() {
       logout();
     }
   }, [isAuthenticated, loading, logout]);
+
+  useEffect(() => {
+    if (token) {
+      getChapterNotes(token, book, chapter).then((notes) => {
+        if (!notes) {
+          throw Error(`Couldn't fetch notes for ${book} ${chapter}`);
+        }
+        const newNotes: NoteDataType[] = Array.apply(
+          undefined,
+          Array(text?.verses.length)
+        ) as NoteDataType[];
+        notes.forEach((note) => {
+          newNotes[note.verse] = note;
+        });
+        setNotes(newNotes);
+      });
+    }
+  });
 
   if (loading || !user || !roots) {
     return <Loader />;
@@ -209,7 +228,9 @@ export default function Notes() {
           </div>
         </div>
       )}
-      {text && !sessionComplete && <BibleTextDisplay text={text} />}
+      {text && !sessionComplete && (
+        <BibleTextDisplay text={text} notes={notes} />
+      )}
       {sessionComplete && (
         <div className="bg-gray-100 m-6 p-4 flex flex-col gap-2 py-8 text-center">
           <div className="text-xl font-bold">Congratulations!</div>
