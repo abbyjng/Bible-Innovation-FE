@@ -60,7 +60,7 @@ export default function Notes() {
   }, [isAuthenticated, loading, logout]);
 
   useEffect(() => {
-    if (token) {
+    if (token && text) {
       getChapterNotes(token, book, chapter).then((notes) => {
         if (!notes) {
           throw Error(`Couldn't fetch notes for ${book} ${chapter}`);

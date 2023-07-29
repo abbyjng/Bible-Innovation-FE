@@ -92,33 +92,34 @@ export const getNotes = async (
     // const result = await response.json();
     // return result;
 
+    const notes = [
+      {
+        book: "Genesis",
+        chapter: 1,
+        verse: 5,
+        note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        created: 1690203083897,
+      },
+      {
+        book: "Genesis",
+        chapter: 1,
+        verse: 3,
+        note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        created: 1690101083897,
+      },
+      {
+        book: "Genesis",
+        chapter: 1,
+        verse: 10,
+        note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        created: 1690302083897,
+      },
+    ];
     const note = localStorage.getItem("noteSaveData");
     if (note) {
-      return [
-        JSON.parse(note),
-        {
-          book: "Genesis",
-          chapter: 1,
-          verse: 5,
-          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
-          created: 1690203083897,
-        },
-        {
-          book: "Genesis",
-          chapter: 1,
-          verse: 3,
-          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
-          created: 1690101083897,
-        },
-        {
-          book: "Genesis",
-          chapter: 1,
-          verse: 10,
-          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
-          created: 1690302083897,
-        },
-      ];
+      notes.push(JSON.parse(note));
     }
+    return notes;
   } catch (e) {
     console.log("Error: ", e);
   }
@@ -139,33 +140,34 @@ export const getChapterNotes = async (
     // const result = await response.json();
     // return result;
 
+    const notes = [
+      {
+        book: "Genesis",
+        chapter: 1,
+        verse: 5,
+        note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        created: 1690203083897,
+      },
+      {
+        book: "Genesis",
+        chapter: 1,
+        verse: 3,
+        note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        created: 1690101083897,
+      },
+      {
+        book: "Genesis",
+        chapter: 1,
+        verse: 10,
+        note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        created: 1690302083897,
+      },
+    ];
     const note = localStorage.getItem("noteSaveData");
     if (note) {
-      return [
-        JSON.parse(note),
-        {
-          book: "Genesis",
-          chapter: 1,
-          verse: 5,
-          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
-          created: 1690203083897,
-        },
-        {
-          book: "Genesis",
-          chapter: 1,
-          verse: 3,
-          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
-          created: 1690101083897,
-        },
-        {
-          book: "Genesis",
-          chapter: 1,
-          verse: 10,
-          note: "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
-          created: 1690302083897,
-        },
-      ];
+      notes.push(JSON.parse(note));
     }
+    return notes;
   } catch (e) {
     console.log("Error: ", e);
   }

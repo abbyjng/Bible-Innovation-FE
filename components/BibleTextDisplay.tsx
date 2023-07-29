@@ -51,6 +51,8 @@ const BibleTextDisplay: React.FC<Props> = ({
     };
     const jsonData = JSON.stringify(noteData, null, 2);
     localStorage.setItem("noteSaveData", jsonData);
+
+    notes[verse] = noteData;
   };
 
   return (
@@ -95,8 +97,9 @@ const BibleTextDisplay: React.FC<Props> = ({
             chapter={text.chapter || 0}
             verse={Object.keys(selectedVerse)[0] as unknown as number}
             content={
-              notes[Object.keys(selectedVerse)[0] as unknown as number].note ||
-              ""
+              notes[Object.keys(selectedVerse)[0] as unknown as number]
+                ? notes[Object.keys(selectedVerse)[0] as unknown as number].note
+                : ""
             }
             hideNoteEditor={() => {
               setNoteEditorOpen(false);

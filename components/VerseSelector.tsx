@@ -45,7 +45,9 @@ const VerseSelector: React.FC<Props> = ({
         }
       });
     }
+  }, [router, versions]);
 
+  useEffect(() => {
     if (!versionInfo) {
       getVersionInfo(selectedVersion).then(
         (versionInfo: VersionInfoType | undefined) => {
@@ -58,7 +60,7 @@ const VerseSelector: React.FC<Props> = ({
         }
       );
     }
-  });
+  }, [router, selectedVersion, versionInfo]);
 
   useEffect(() => {
     if (book && chapter) {
