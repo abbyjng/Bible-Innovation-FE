@@ -181,20 +181,33 @@ export const AuthProvider = ({ children }: any) => {
 
   const updateUser = async (displayName: string, photoURL: string) => {
     if (!user) return;
+
+    let headers: any = {
+      user: token as string,
+    };
+    if (displayName) {
+      headers.displayName = displayName;
+    }
+    if (photoURL) {
+      headers.photoURL = photoURL;
+    }
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/update-profile`,
       {
         method: "POST",
-        headers: {
-          user: token as string,
-          displayName: displayName,
-          photoURL: photoURL,
-        },
+        headers,
       }
     );
     const result = await response.text();
     if (result === "Success") {
-      setUser({ ...user, displayName: displayName, photoURL: photoURL });
+      if (displayName && photoURL) {
+        setUser({ ...user, displayName: displayName, photoURL: photoURL });
+      } else if (displayName) {
+        setUser({ ...user, displayName: displayName });
+      } else if (photoURL) {
+        setUser({ ...user, photoURL: photoURL });
+      }
     }
   };
 

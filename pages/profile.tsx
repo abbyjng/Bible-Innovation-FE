@@ -67,10 +67,12 @@ export default function Profile() {
         {/* Profile Picture and Username */}
         <div className="text-center">
           {user.photoURL ? (
-            <Image
-              className="mx-auto w-[100px] h-[100px] mt-2"
+            <img
+              className="mx-auto mt-2"
               src={user.photoURL}
               alt="profile picture"
+              width={100}
+              height={100}
             />
           ) : (
             <Image
