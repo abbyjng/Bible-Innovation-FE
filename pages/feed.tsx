@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MenuBar from "@/components/MenuBar";
-import { Page } from "@/utils/types";
+import { Page, PostType } from "@/utils/types";
 import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
@@ -10,10 +10,11 @@ import ProfileIcon from "@/components/icons/ProfileIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
 import CommentIcon from "@/components/icons/CommentIcon";
+import { getFollowedPosts } from "@/utils/orchestration";
 
 export default function Feed() {
-  const [posts, setPosts] = useState<any[]>([]); // TODO: figure out typing
-  const { loading, isAuthenticated, user, logout } = useAuth();
+  const [posts, setPosts] = useState<PostType[]>();
+  const { loading, isAuthenticated, user, logout, token } = useAuth();
 
   useEffect(() => {
     // checks if the user is authenticated
@@ -23,97 +24,71 @@ export default function Feed() {
     }
   }, [isAuthenticated, loading, logout]);
 
+  useEffect(() => {
+    console.log("here");
+    if (!posts && token) {
+      console.log("now here");
+      getFollowedPosts(token).then((posts) => {
+        console.log(posts);
+        if (posts) setPosts(posts);
+      });
+    }
+  });
+
   if (loading || !user) {
     return <Loader />;
   }
 
-  const getPosts = () => {
-    // TODO: connect to backend
-    return;
-  };
-
   return (
     <PageLayout menuBar={<MenuBar currentPage={Page.FEED} />}>
-      {/* this is going to be hardcoded for now as an example */}
-      <div className="p-2 pb-20">
-        {/* Post 1 */}
-        <div className="ml-2 mr-2 mt-2">
-          <img
-            src="https://www.thesprucepets.com/thmb/uQnGtOt9VQiML2oG2YzAmPErrHo=/5441x0/filters:no_upscale():strip_icc()/all-about-tabby-cats-552489-hero-a23a9118af8c477b914a0a1570d4f787.jpg"
-            alt="post"
-          ></img>
-          <div className="bg-slateGray">
-            <div className="flex pt-[5px] pl-[5px]">
-              <ProfileIcon className="fill-white" />
-              <p className="ml-3 text-base font-sans text-white">CatsAreCool78</p>
-              <div className="flex pl-[135px]">
-                <HeartIcon className="stroke-white w-6 h-6 mr-2" />
-                <CommentIcon className="stroke-white w-6 h-6 ml-2 mr-2" />
-                <BookmarkIcon className="stroke-white w-6 h-6 ml-2" />
-              </div>
-            </div>
-            <div className="flex">
-              <p className="ml-3 text-white">|</p>
-              <p className="text-zinc-400 ml-2 text-base font-sans">
-                View Thread
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Post 2 */}
-        <div>
-          <div className="ml-2 mr-2 mt-2">
-            <img
-              src="https://images.unsplash.com/photo-1535591273668-578e31182c4f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjM2NTI5fQ"
-              alt="post"
-            ></img>
-            <div className="bg-slateGray">
-              <div className="flex pt-[5px] pl-[5px]">
-                <ProfileIcon className="fill-white" />
-                <p className="ml-3 text-base font-sans text-white">Nemo</p>
-                <div className="flex pl-[195px]">
-                  <HeartIcon className="stroke-white w-6 h-6 mr-2" />
-                  <CommentIcon className="stroke-white w-6 h-6 ml-2 mr-2" />
-                  <BookmarkIcon className="stroke-white w-6 h-6 ml-2" />
+      <div className="p-2 pb-20 m-6 flex flex-col gap-6">
+        {posts &&
+          posts.map((post, index) => {
+            return (
+              <div className="border-2 border-slateGray" key={index}>
+                <div className="p-4 h-full flex flex-col gap-2">
+                  <span className="font-semibold">
+                    {post.post.book} {post.post.chapter}:{post.post.verse}
+                  </span>
+                  <div
+                    className="flex flex-col gap-2"
+                    dangerouslySetInnerHTML={{ __html: post.post.note }}
+                  />
+                </div>
+                <div className="bg-slateGray py-2 px-4">
+                  <div className="flex justify-between">
+                    <div className="flex items-center">
+                      {post.photoURL ? (
+                        <img
+                          className="rounded-full w-5 h-5"
+                          src={post.photoURL}
+                          alt="profile photo"
+                        />
+                      ) : (
+                        <ProfileIcon className="fill-white" />
+                      )}
+                      <p className="ml-3 text-base text-white">
+                        {post.displayName}
+                      </p>
+                    </div>
+                    <div className="flex items-center">
+                      <HeartIcon className="stroke-white w-6 h-6 mr-2" />
+                      <CommentIcon className="stroke-white w-6 h-6 ml-2 mr-2" />
+                      <BookmarkIcon className="stroke-white w-6 h-6 ml-2" />
+                    </div>
+                  </div>
+                  <div className="flex justify-between mt-2">
+                    <div className="border-l border-white mx-2 px-2">
+                      <p className="text-white/60 text-base">View Thread</p>
+                    </div>
+                    <div className="text-white/60">
+                      {new Date(post.post.created).toLocaleDateString()}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex">
-                <p className="ml-3 text-white font-sans text-base">|</p>
-                <p className="text-zinc-400 ml-2 text-base font-sans">
-                  View Thread
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Post 3 */}
-        <div>
-          <div className="ml-2 mr-2 mt-2">
-            <img
-              src="https://www.science.org/do/10.1126/science.aba2340/abs/dogs_1280p_0.jpg"
-              alt="post"
-            ></img>
-            <div className="bg-slateGray">
-              <div className="flex pt-[5px] pl-[5px]">
-                <ProfileIcon className="fill-white" />
-                <p className="ml-3 text-base font-sans text-white">DogFan20</p>
-                <div className="flex pl-[165px]">
-                  <HeartIcon className="stroke-white w-6 h-6 mr-2" />
-                  <CommentIcon className="stroke-white w-6 h-6 ml-2 mr-2" />
-                  <BookmarkIcon className="stroke-white w-6 h-6 ml-2" />
-                </div>
-              </div>
-              <div className="flex">
-                <p className="ml-3 text-white">|</p>
-                <p className="text-zinc-400 ml-2 text-base font-sans">
-                  View Thread
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+            );
+          })}
       </div>
     </PageLayout>
   );

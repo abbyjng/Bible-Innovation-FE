@@ -70,7 +70,7 @@ const BibleTextDisplay: React.FC<Props> = ({
         <div className="text-xl font-bold my-4">
           {text?.bookname} {text?.chapter}
         </div>
-        <div className="font-sans">
+        <div className="leading-9">
           {text?.verses.map((verse, index) => {
             return (
               <Verse

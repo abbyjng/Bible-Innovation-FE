@@ -71,3 +71,10 @@ export interface VersionInfoType {
 interface TestamentType {
   [book: string]: number;
 }
+
+export interface PostType {
+  uid: string;
+  displayName: string;
+  photoURL: string;
+  post: NoteDataType;
+}

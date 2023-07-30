@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MenuBar from "@/components/MenuBar";
-import { Page } from "@/utils/types";
+import { NoteDataType, Page } from "@/utils/types";
 import Link from "next/link";
 import { useAuth } from "@/UserContext";
 import Image from "next/image";
@@ -10,11 +10,13 @@ import DefaultImg from "../assets/default.png";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import { classNames, isNextDay } from "@/utils/helper";
+import { getPublicNotes } from "@/utils/orchestration";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [displayName, setDisplayName] = useState<string>("");
   const [photoURL, setPhotoURL] = useState<string>("");
+  const [posts, setPosts] = useState<NoteDataType[]>();
 
   const {
     loading,
@@ -25,6 +27,7 @@ export default function Profile() {
     roots,
     updateRoots,
     updateUser,
+    token,
   } = useAuth();
 
   useEffect(() => {
@@ -41,6 +44,14 @@ export default function Profile() {
       if ((status === 1 || status === 0) && roots.count >= 7) {
         updateRoots(0, 0);
       }
+    }
+  });
+
+  useEffect(() => {
+    if (!posts && token) {
+      getPublicNotes(token).then((posts) => {
+        if (posts) setPosts(posts);
+      });
     }
   });
 
@@ -91,12 +102,12 @@ export default function Profile() {
               }}
             />
           ) : (
-            <p className="font-bold font-sans">{user.displayName}</p>
+            <p className="font-bold ">{user.displayName}</p>
           )}
         </div>
 
         {/* User Statistics */}
-        <div className="text-center flex justify-between m-4 font-sans">
+        <div className="text-center flex justify-between m-4 ">
           <div>
             <p className="font-bold">{streak?.count}</p>
             <p>Streak</p>
@@ -113,9 +124,7 @@ export default function Profile() {
 
         {/* Habit Building */}
         <div className="flex flex-col gap-5">
-          <p className="font-bold text-center font-sans">
-            growing roots sessions
-          </p>
+          <p className="font-bold text-center ">growing roots sessions</p>
           <div className="flex justify-center w-full">
             <div className="flex justify-center items-center max-w-[350px] w-full">
               {Array.apply(null, Array(7)).map((_, index) => {
@@ -151,25 +160,37 @@ export default function Profile() {
         </div>
 
         {/* Achievement Button -- temporarily removing while functionality is not possible */}
-        {/* <div className="bg-gray-200 ml-4 mr-4 mt-4 mb-4 text-center font-sans">
+        {/* <div className="bg-gray-200 ml-4 mr-4 mt-4 mb-4 text-center ">
           <button>
             <p className="mt-2 mb-2">Achievements</p>
           </button>
         </div> */}
 
         {/* User Posts */}
-        <div className="text-center">
-          <p className="font-bold mt-8 mb-8 font-sans">Posts</p>
-          <div className="flex mb-8 w-[200px] h-[200px]">
-            <img
-              src="https://www.thesprucepets.com/thmb/uQnGtOt9VQiML2oG2YzAmPErrHo=/5441x0/filters:no_upscale():strip_icc()/all-about-tabby-cats-552489-hero-a23a9118af8c477b914a0a1570d4f787.jpg"
-              alt="post"
-            ></img>
-          </div>
+        <div className="flex flex-col gap-8 items-center mt-10">
+          {posts &&
+            posts.map((post, index) => {
+              return (
+                <div className="w-[80%] flex flex-col" key={index}>
+                  <div
+                    className="flex flex-col gap-2 p-4 border border-black mb-2 h-full cursor-pointer"
+                    dangerouslySetInnerHTML={{ __html: post.note }}
+                  />
+                  <div className="flex flex-wrap justify-between mb-2 ">
+                    <div>
+                      {post.book} {post.chapter}:{post.verse}
+                    </div>
+                    <div className="text-gray-400">
+                      {new Date(post.created).toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
         </div>
 
         {/* Sign out button */}
-        <div className="text-center text-blue-600 mb-2 font-sans underline">
+        <div className="text-center text-blue-600 mb-2  underline">
           <Link href="/signout">
             <p>Sign Out</p>
           </Link>
