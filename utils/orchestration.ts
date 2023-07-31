@@ -232,7 +232,6 @@ export const getFollowedPosts = async (
   token: string
 ): Promise<PostType[] | undefined> => {
   try {
-    console.log("here!");
     // const response = await fetch(
     //   `${process.env.NEXT_PUBLIC_API_URL}/notes/followed/?user=${token}`,
     //   {

@@ -25,11 +25,8 @@ export default function Feed() {
   }, [isAuthenticated, loading, logout]);
 
   useEffect(() => {
-    console.log("here");
     if (!posts && token) {
-      console.log("now here");
       getFollowedPosts(token).then((posts) => {
-        console.log(posts);
         if (posts) setPosts(posts);
       });
     }
