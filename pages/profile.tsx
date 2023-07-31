@@ -117,7 +117,9 @@ export default function Profile() {
             <p>Posts</p>
           </div>
           <div>
-            <p className="font-bold">0</p>
+            <p className="font-bold">
+              {user.friends ? user.friends.length : 0}
+            </p>
             <p>Friends</p>
           </div>
         </div>

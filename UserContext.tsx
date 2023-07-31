@@ -31,7 +31,27 @@ export const AuthProvider = ({ children }: any) => {
             user: cookieToken,
           },
         });
-        if (user && user.status === 200) setUser(await user.json());
+        if (user && user.status === 200) {
+          const userDecoded = await user.json();
+          if (userDecoded.friends) {
+            const followedArray = [];
+
+            for (const key in userDecoded.friends) {
+              if (userDecoded.friends.hasOwnProperty(key)) {
+                followedArray.push(userDecoded.friends[key].uid);
+              }
+            }
+
+            setUser({
+              uid: userDecoded.uid,
+              photoURL: userDecoded.photoURL,
+              displayName: userDecoded.displayName,
+              friends: followedArray,
+            });
+          } else {
+            setUser(userDecoded);
+          }
+        }
 
         const streak = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/streak`,
@@ -72,7 +92,27 @@ export const AuthProvider = ({ children }: any) => {
         user: token,
       },
     });
-    if (user && user.status === 200) setUser(await user.json());
+    if (user && user.status === 200) {
+      const userDecoded = await user.json();
+      if (userDecoded.friends) {
+        const followedArray = [];
+
+        for (const key in userDecoded.friends) {
+          if (userDecoded.friends.hasOwnProperty(key)) {
+            followedArray.push(userDecoded.friends[key].uid);
+          }
+        }
+
+        setUser({
+          uid: userDecoded.uid,
+          photoURL: userDecoded.photoURL,
+          displayName: userDecoded.displayName,
+          friends: followedArray,
+        });
+      } else {
+        setUser(userDecoded);
+      }
+    }
 
     const streak = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/streak`, {
       method: "GET",
@@ -211,6 +251,54 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
+  const followUser = async (toFollow: string) => {
+    if (!token || !user) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/add-friend`,
+        {
+          method: "POST",
+          headers: {
+            user: token,
+            "to-follow": toFollow,
+          },
+        }
+      );
+      if (response && response.status === 201)
+        setUser({
+          ...user,
+          friends: [...(user.friends ? user.friends : []), toFollow],
+        });
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+
+  const unfollowUser = async (toUnfollow: string) => {
+    if (!token || !user || !user.friends) return;
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/remove-friend`,
+        {
+          method: "POST",
+          headers: {
+            user: token,
+            "to-unfollow": toUnfollow,
+          },
+        }
+      );
+      if (response && response.status === 200)
+        setUser({
+          ...user,
+          friends: user.friends.filter((u) => u !== toUnfollow),
+        });
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -226,6 +314,8 @@ export const AuthProvider = ({ children }: any) => {
         updateStreak,
         updateRoots,
         updateUser,
+        followUser,
+        unfollowUser,
       }}
     >
       {children}

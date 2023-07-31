@@ -19,12 +19,15 @@ export interface UserContextType {
   updateStreak: (count: number, lastIncrement: number) => void;
   updateRoots: (count: number, lastIncrement: number) => void;
   updateUser: (displayName: string, photoURL: string) => void;
+  followUser: (toFollow: string) => void;
+  unfollowUser: (toUnfollow: string) => void;
 }
 
 export interface UserType {
   displayName: string;
   uid: string;
   photoURL: string;
+  friends?: string[];
 }
 
 export interface StreakType {
@@ -77,4 +80,11 @@ export interface PostType {
   displayName: string;
   photoURL: string;
   post: NoteDataType;
+}
+
+export interface OtherUserType {
+  displayName: string;
+  uid: string;
+  photoURL: string;
+  email: string;
 }

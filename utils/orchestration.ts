@@ -1,9 +1,9 @@
 import {
   ChapterType,
   NoteDataType,
+  OtherUserType,
   PostType,
   SearchPageType,
-  StreakType,
   VersionInfoType,
 } from "./types";
 
@@ -300,6 +300,40 @@ export const updateNote = async (
           user: token,
           noteData: JSON.stringify(noteData),
         },
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+export const getFriends = async (
+  token: string
+): Promise<{ item: OtherUserType; refIndex: number }[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/friends/?user=${token}`,
+      {
+        method: "GET",
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+export const searchFriends = async (
+  query: string
+): Promise<{ item: OtherUserType; refIndex: number }[] | undefined> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/search-users/?query=${query}`,
+      {
+        method: "GET",
       }
     );
     const result = await response.json();
