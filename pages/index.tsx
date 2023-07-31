@@ -17,6 +17,7 @@ export default function Home() {
   const chapter = useRef<number>();
   const version = useRef<string>();
 
+  const [hasCheckedStreak, setHasCheckedStreak] = useState<boolean>();
   const [text, setText] = useState<ChapterType>();
   const [notes, setNotes] = useState<NoteDataType[]>([]);
 
@@ -112,16 +113,19 @@ export default function Home() {
   });
 
   useEffect(() => {
-    const now = new Date();
-    if (streak && !loading) {
-      const status = isNextDay(streak.lastIncrement);
-      if (status === 1) {
-        updateStreak(streak.count + 1, now.getTime());
-      } else if (status === 0) {
-        updateStreak(1, now.getTime());
+    if (!hasCheckedStreak) {
+      const now = new Date();
+      if (streak && !loading) {
+        const status = isNextDay(streak.lastIncrement);
+        if (status === 1) {
+          updateStreak(streak.count + 1, now.getTime());
+        } else if (status === 0) {
+          updateStreak(1, now.getTime());
+        }
       }
+      setHasCheckedStreak(true);
     }
-  });
+  }, [hasCheckedStreak, loading, streak, updateStreak]);
 
   if (!text || loading) {
     return <Loader />;

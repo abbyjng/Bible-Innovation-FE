@@ -105,7 +105,7 @@ export default function Feed() {
                       key={index}
                       className="bg-gray-200 w-full px-4 py-2 flex justify-between gap-4 items-center"
                     >
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 items-center">
                         {result.item.photoURL ? (
                           <img
                             className="rounded-full w-5 h-5"

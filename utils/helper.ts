@@ -19,7 +19,7 @@ export const isNextDay = (time: number): number => {
     yesterday.getFullYear() === lastIncrement.getFullYear()
   ) {
     return 1;
-  } else if (now.getTime() - lastIncrement.getTime() > 1000 * 60 * 60 * 48) {
+  } else if (now.getTime() - lastIncrement.getTime() > 1000 * 60 * 60 * 24) {
     return 0;
   } else {
     return 2;

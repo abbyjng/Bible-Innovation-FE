@@ -13,6 +13,7 @@ import Countdown, { CountdownApi } from "react-countdown";
 import { isNextDay } from "@/utils/helper";
 
 export default function Notes() {
+  const [hasCheckedStreak, setHasCheckedStreak] = useState<boolean>(false);
   const [allowed, setAllowed] = useState<boolean>(false);
   const [minuteTens, setMinuteTens] = useState<number>(3);
   const [minuteOnes, setMinuteOnes] = useState<number>(0);
@@ -39,17 +40,18 @@ export default function Notes() {
   });
 
   useEffect(() => {
-    if (roots && !loading) {
+    if (roots && !loading && !hasCheckedStreak) {
       const status = isNextDay(roots.lastIncrement);
       if (status === 1 || status === 0) {
         setAllowed(true);
-        if (roots.count >= 7) {
-          // streak is full, reset
+        if (status === 0 || roots.count >= 7) {
+          // streak is full or more than a day has passed, reset
           updateRoots(0, 0);
         }
       }
+      setHasCheckedStreak(true);
     }
-  }, [loading, roots, updateRoots]);
+  }, [loading, roots, updateRoots, hasCheckedStreak]);
 
   useEffect(() => {
     // checks if the user is authenticated

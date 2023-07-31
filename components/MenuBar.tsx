@@ -151,7 +151,7 @@ const MenuBar: React.FC<Props> = ({
               Time left: <span className="font-bold">{timer}</span>
             </div>
             <div
-              className="bg-gray-100 w-full p-2 text-center"
+              className="bg-gray-100 w-full p-2 text-center cursor-pointer"
               onClick={() => {
                 setNavigationOpen(true);
                 setTimerPopupOpen(false);
