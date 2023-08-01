@@ -67,20 +67,42 @@ export default function Notes() {
         note.chapter === chapter &&
         note.verse === verse
       ) {
-        return {
-          book: book,
-          chapter: chapter,
-          verse: verse,
-          note: content,
-          timestamp: now,
-          shared: false,
-        };
+        return noteData;
       } else {
         return note;
       }
     });
 
     setNotes(newNotes);
+  };
+
+  const toggleVisibility = () => {
+    if (!openNote) return;
+    const now = new Date().getTime();
+    const noteData: NoteDataType = {
+      book: openNote.book,
+      chapter: openNote.chapter,
+      verse: openNote.verse,
+      note: openNote.note,
+      timestamp: now,
+      shared: !openNote.shared,
+    };
+    createOrUpdateNote(token, noteData);
+
+    const newNotes = notes.map((note) => {
+      if (
+        note.book === openNote.book &&
+        note.chapter === openNote.chapter &&
+        note.verse === openNote.verse
+      ) {
+        return noteData;
+      } else {
+        return note;
+      }
+    });
+
+    setNotes(newNotes);
+    setOpenNote(noteData);
   };
 
   return (
@@ -92,6 +114,12 @@ export default function Notes() {
             onClick={() => setOpenNote(undefined)}
           >
             <CloseIcon className="fill-black" />
+          </div>
+          <div
+            className="bg-gray-200 mx-[10%] px-4 py-2 rounded cursor-pointer text-center"
+            onClick={toggleVisibility}
+          >
+            {openNote.shared ? "Hide from profile" : "Publish to profile"}
           </div>
           <NoteEditor
             book={openNote.book}

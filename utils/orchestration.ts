@@ -128,6 +128,30 @@ export const getNotes = async (
   }
 };
 
+export const getPublicNotes = async (
+  token: string
+): Promise<NoteDataType[] | undefined> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes`, {
+      method: "GET",
+      headers: {
+        user: token,
+      },
+    });
+    const result = await response.json();
+    const returnNotes = [];
+    for (const key in result) {
+      if (result.hasOwnProperty(key) && result[key].shared) {
+        returnNotes.push(result[key]);
+      }
+    }
+
+    return returnNotes;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
 export const getFeed = async (
   token: string
 ): Promise<

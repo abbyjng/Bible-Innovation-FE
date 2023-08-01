@@ -10,7 +10,7 @@ import DefaultImg from "../assets/default.png";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import { classNames, isNextDay } from "@/utils/helper";
-import { getNotes } from "@/utils/orchestration";
+import { getNotes, getPublicNotes } from "@/utils/orchestration";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -49,7 +49,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (!posts && token) {
-      getNotes(token).then((posts) => {
+      getPublicNotes(token).then((posts) => {
         if (posts) setPosts(posts);
       });
     }
