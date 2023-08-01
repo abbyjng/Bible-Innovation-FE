@@ -4,6 +4,8 @@ import Verse from "./Verse";
 import NoteEditor from "./NoteEditor";
 import HighlightPopup from "./HighlightPopup";
 import { useRouter } from "next/router";
+import { createOrUpdateNote } from "@/utils/orchestration";
+import { useAuth } from "@/UserContext";
 
 interface Props {
   text: ChapterType;
@@ -23,6 +25,12 @@ const BibleTextDisplay: React.FC<Props> = ({
   const [scrollVerse, setScrollVerse] = useState<string>();
 
   const router = useRouter();
+
+  const { token } = useAuth();
+
+  if (!token) {
+    throw Error("Something went wrong");
+  }
 
   useEffect(() => {
     if (text && router.query?.verse && router.query?.verse !== scrollVerse) {
@@ -47,12 +55,11 @@ const BibleTextDisplay: React.FC<Props> = ({
       chapter: chapter,
       verse: verse,
       note: content,
-      created: new Date().getTime(),
+      timestamp: new Date().getTime(),
+      shared: false,
     };
-    const jsonData = JSON.stringify(noteData, null, 2);
-    localStorage.setItem("noteSaveData", jsonData);
-
-    notes[verse] = noteData;
+    createOrUpdateNote(token, noteData);
+    notes[verse - 1] = noteData;
   };
 
   return (
@@ -84,7 +91,9 @@ const BibleTextDisplay: React.FC<Props> = ({
                 }}
                 highlight={highlights[index]}
                 routerVerse={Object.keys(verse)[0] === scrollVerse}
-                hasNote={!!notes[Object.keys(verse)[0] as unknown as number]}
+                hasNote={
+                  !!notes[(Object.keys(verse)[0] as unknown as number) - 1]
+                }
               />
             );
           })}
@@ -97,8 +106,10 @@ const BibleTextDisplay: React.FC<Props> = ({
             chapter={text.chapter || 0}
             verse={Object.keys(selectedVerse)[0] as unknown as number}
             content={
-              notes[Object.keys(selectedVerse)[0] as unknown as number]
-                ? notes[Object.keys(selectedVerse)[0] as unknown as number].note
+              notes[(Object.keys(selectedVerse)[0] as unknown as number) - 1]
+                ? notes[
+                    (Object.keys(selectedVerse)[0] as unknown as number) - 1
+                  ].note
                 : ""
             }
             hideNoteEditor={() => {
@@ -126,7 +137,7 @@ const BibleTextDisplay: React.FC<Props> = ({
               setHighlightPopupOpen(false);
             }}
             hasNote={
-              !!notes[Object.keys(selectedVerse)[0] as unknown as number]
+              !!notes[(Object.keys(selectedVerse)[0] as unknown as number) - 1]
             }
           />
         </div>

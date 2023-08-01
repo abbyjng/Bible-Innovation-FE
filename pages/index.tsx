@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import MenuBar from "@/components/MenuBar";
 import { ChapterType, NoteDataType, Page } from "@/utils/types";
 import { getNumber, isNextDay } from "@/utils/helper";
-import { getChapterNotes, getText } from "@/utils/orchestration";
+import { getNote, getText } from "@/utils/orchestration";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import BibleTextDisplay from "@/components/BibleTextDisplay";
@@ -19,7 +19,7 @@ export default function Home() {
 
   const [hasCheckedStreak, setHasCheckedStreak] = useState<boolean>();
   const [text, setText] = useState<ChapterType>();
-  const [notes, setNotes] = useState<NoteDataType[]>([]);
+  const [notes, setNotes] = useState<NoteDataType[]>();
 
   const { loading, user, streak, updateStreak, token } = useAuth();
 
@@ -54,6 +54,7 @@ export default function Home() {
       } else if ("error" in text) {
         router.push("/");
       } else {
+        setNotes(undefined);
         setText(text);
 
         // set localStorage to the current viewing book, chapter, and version so that the next load will use the same chapter
@@ -65,26 +66,37 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (token) {
-      getChapterNotes(
-        token,
-        book.current as string,
-        chapter.current as number
-      ).then((notes) => {
-        if (!notes) {
-          throw Error(`Couldn't fetch notes for ${book} ${chapter}`);
-        }
-        const newNotes: NoteDataType[] = Array.apply(
-          undefined,
-          Array(text?.verses.length)
-        ) as NoteDataType[];
-        notes.forEach((note) => {
-          newNotes[note.verse] = note;
-        });
-        setNotes(newNotes);
+    if (!loading && token && !notes && text) {
+      getNotes().then((notes) => {
+        if (notes) setNotes(notes);
       });
     }
   });
+
+  const getNotes = async (): Promise<NoteDataType[] | undefined> => {
+    if (token && text) {
+      const newNotes: NoteDataType[] = Array.apply(
+        undefined,
+        Array(text?.verses.length)
+      ) as NoteDataType[];
+
+      await Promise.all(
+        text.verses.map(async (_, index) => {
+          const note = await getNote(
+            token,
+            book.current as string,
+            chapter.current as number,
+            index + 1
+          );
+          if (note) newNotes[index] = note;
+        })
+      );
+
+      return newNotes;
+    } else {
+      return;
+    }
+  };
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -153,7 +165,9 @@ export default function Home() {
         />
       }
     >
-      <BibleTextDisplay text={text} loggedIn={!!user} notes={notes} />
+      {notes && text && (
+        <BibleTextDisplay text={text} loggedIn={!!user} notes={notes} />
+      )}
     </PageLayout>
   );
 }

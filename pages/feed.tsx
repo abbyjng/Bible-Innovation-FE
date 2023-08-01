@@ -10,7 +10,7 @@ import ProfileIcon from "@/components/icons/ProfileIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
 import CommentIcon from "@/components/icons/CommentIcon";
-import { getFollowedPosts, searchFriends } from "@/utils/orchestration";
+import { getFeed, getUser, searchFriends } from "@/utils/orchestration";
 import SearchIcon from "@/components/icons/SearchIcon";
 import CloseIcon from "@/components/icons/CloseIcon";
 import LoadingIcon from "@/components/icons/LoadingIcon";
@@ -57,11 +57,52 @@ export default function Feed() {
 
   useEffect(() => {
     if (!posts && token) {
-      getFollowedPosts(token).then((posts) => {
-        if (posts) setPosts(posts);
+      getFeed(token).then((posts) => {
+        if (posts) {
+          getUsers(posts.content).then((newPosts) => {
+            if (newPosts) setPosts(newPosts);
+          });
+        }
       });
     }
-  }, [posts, token, user]);
+  }, [posts, token, user?.friends]);
+
+  const getUsers = async (posts: PostType[]) => {
+    let newPosts: PostType[] = [];
+    await posts.reduce(async (users: any, post) => {
+      const currUsers = await users;
+
+      if (post.uid in currUsers) {
+        newPosts.push({
+          ...post,
+          displayName: currUsers[post.uid].displayName
+            ? currUsers[post.uid].displayName
+            : undefined,
+          photoURL: currUsers[post.uid].photoURL
+            ? currUsers[post.uid].photoURL
+            : undefined,
+        });
+        return currUsers;
+      } else {
+        const user = await getUser(post.uid);
+
+        if (user)
+          newPosts.push({
+            ...post,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          });
+        else
+          newPosts.push({
+            ...post,
+          });
+        currUsers[post.uid] = user;
+        return currUsers;
+      }
+    }, {});
+
+    return newPosts;
+  };
 
   if (loading || !user || !token) {
     return <Loader />;
@@ -155,11 +196,11 @@ export default function Feed() {
                   <div className="border-2 border-slateGray" key={index}>
                     <div className="p-4 h-full flex flex-col gap-2">
                       <span className="font-semibold">
-                        {post.post.book} {post.post.chapter}:{post.post.verse}
+                        {post.book} {post.chapter}:{post.verse}
                       </span>
                       <div
                         className="flex flex-col gap-2"
-                        dangerouslySetInnerHTML={{ __html: post.post.note }}
+                        dangerouslySetInnerHTML={{ __html: post.note }}
                       />
                     </div>
                     <div className="bg-slateGray py-2 px-4">
@@ -189,7 +230,7 @@ export default function Feed() {
                           <p className="text-white/60 text-base">View Thread</p>
                         </div>
                         <div className="text-white/60">
-                          {new Date(post.post.created).toLocaleDateString()}
+                          {new Date(post.timestamp).toLocaleDateString()}
                         </div>
                       </div>
                     </div>

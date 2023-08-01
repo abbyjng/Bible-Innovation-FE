@@ -10,7 +10,7 @@ import DefaultImg from "../assets/default.png";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import { classNames, isNextDay } from "@/utils/helper";
-import { getPublicNotes } from "@/utils/orchestration";
+import { getNotes, getPublicNotes } from "@/utils/orchestration";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -49,7 +49,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (!posts && token) {
-      getPublicNotes(token).then((posts) => {
+      getNotes(token).then((posts) => {
         if (posts) setPosts(posts);
       });
     }
@@ -183,7 +183,7 @@ export default function Profile() {
                       {post.book} {post.chapter}:{post.verse}
                     </div>
                     <div className="text-gray-400">
-                      {new Date(post.created).toLocaleDateString()}
+                      {new Date(post.timestamp).toLocaleDateString()}
                     </div>
                   </div>
                 </div>

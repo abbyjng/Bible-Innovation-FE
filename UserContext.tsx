@@ -64,7 +64,12 @@ export const AuthProvider = ({ children }: any) => {
         );
         if (streak && streak.status === 200) {
           const jsonData = await streak.json();
-          setStreak({ ...jsonData, lastIncrement: jsonData["last-increment"] });
+          if (jsonData)
+            setStreak({
+              ...jsonData,
+              lastIncrement: jsonData["last-increment"],
+            });
+          else setStreak({ count: 0, lastIncrement: 0 });
         }
 
         const roots = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roots`, {
@@ -75,7 +80,8 @@ export const AuthProvider = ({ children }: any) => {
         });
         if (roots && roots.status === 200) {
           const jsonData = await roots.json();
-          setRoots({ ...jsonData, count: jsonData.days });
+          if (jsonData) setRoots({ ...jsonData, count: jsonData.days });
+          else setRoots({ count: 0, lastIncrement: 0 });
         }
       }
       setIsLoading(false);
@@ -122,7 +128,9 @@ export const AuthProvider = ({ children }: any) => {
     });
     if (streak && streak.status === 200) {
       const jsonData = await streak.json();
-      setStreak({ ...jsonData, lastIncrement: jsonData["last-increment"] });
+      if (jsonData)
+        setStreak({ ...jsonData, lastIncrement: jsonData["last-increment"] });
+      else setStreak({ count: 0, lastIncrement: 0 });
     }
 
     const roots = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roots`, {
@@ -133,7 +141,8 @@ export const AuthProvider = ({ children }: any) => {
     });
     if (roots && roots.status === 200) {
       const jsonData = await roots.json();
-      setRoots({ ...jsonData, count: jsonData.days });
+      if (jsonData) setRoots({ ...jsonData, count: jsonData.days });
+      else setRoots({ count: 0, lastIncrement: 0 });
     }
   };
 
@@ -172,7 +181,7 @@ export const AuthProvider = ({ children }: any) => {
   const logout = () => {
     Cookies.remove("token");
     setUser(undefined);
-    setToken("");
+    setToken(undefined);
     router.push("/signin");
   };
 

@@ -50,7 +50,8 @@ export interface NoteDataType {
   chapter: number;
   verse: number;
   note: string;
-  created: number;
+  timestamp: number;
+  shared: boolean;
 }
 
 export interface SearchPageType {
@@ -77,9 +78,13 @@ interface TestamentType {
 
 export interface PostType {
   uid: string;
+  book: string;
+  chapter: number;
+  verse: number;
+  note: string;
+  timestamp: string;
   displayName: string;
   photoURL: string;
-  post: NoteDataType;
 }
 
 export interface OtherUserType {

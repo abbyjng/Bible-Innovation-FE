@@ -7,7 +7,7 @@ import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import VerseSelector from "@/components/VerseSelector";
-import { getChapterNotes, getText } from "@/utils/orchestration";
+import { getNote, getText } from "@/utils/orchestration";
 import BibleTextDisplay from "@/components/BibleTextDisplay";
 import Countdown, { CountdownApi } from "react-countdown";
 import { isNextDay } from "@/utils/helper";
@@ -62,22 +62,32 @@ export default function Notes() {
   }, [isAuthenticated, loading, logout]);
 
   useEffect(() => {
-    if (token && text) {
-      getChapterNotes(token, book, chapter).then((notes) => {
-        if (!notes) {
-          throw Error(`Couldn't fetch notes for ${book} ${chapter}`);
-        }
-        const newNotes: NoteDataType[] = Array.apply(
-          undefined,
-          Array(text?.verses.length)
-        ) as NoteDataType[];
-        notes.forEach((note) => {
-          newNotes[note.verse] = note;
-        });
-        setNotes(newNotes);
+    if (!loading && token && text && !notes) {
+      getNotes().then((notes) => {
+        if (notes) setNotes(notes);
       });
     }
   });
+
+  const getNotes = async (): Promise<NoteDataType[] | undefined> => {
+    if (token && text) {
+      const newNotes: NoteDataType[] = Array.apply(
+        undefined,
+        Array(text?.verses.length)
+      ) as NoteDataType[];
+
+      Promise.all(
+        text.verses.map(async (_, index) => {
+          const note = await getNote(token, book, chapter, index + 1);
+          if (note) newNotes[index] = note;
+        })
+      );
+
+      return newNotes;
+    } else {
+      return;
+    }
+  };
 
   if (loading || !user || !roots) {
     return <Loader />;

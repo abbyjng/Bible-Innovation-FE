@@ -1,10 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Page } from "../utils/types";
 import { classNames } from "@/utils/helper";
-import Selector from "./Selector";
 import SearchIcon from "./icons/SearchIcon";
-import { BOOKS, CHAPTER_COUNTS } from "../utils/constants";
 import BookIcon from "./icons/BookIcon";
 import NoteIcon from "./icons/NoteIcon";
 import FeedIcon from "./icons/FeedIcon";

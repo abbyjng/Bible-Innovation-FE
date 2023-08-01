@@ -7,7 +7,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
-import { getNotes, updateNote } from "@/utils/orchestration";
+import { getNotes, createOrUpdateNote } from "@/utils/orchestration";
 import { useRouter } from "next/router";
 import NoteEditor from "@/components/NoteEditor";
 
@@ -55,9 +55,10 @@ export default function Notes() {
       chapter: chapter,
       verse: verse,
       note: content,
-      created: now,
+      timestamp: now,
+      shared: false,
     };
-    updateNote(token, noteData);
+    createOrUpdateNote(token, noteData);
 
     const newNotes = notes.map((note) => {
       if (
@@ -70,7 +71,8 @@ export default function Notes() {
           chapter: chapter,
           verse: verse,
           note: content,
-          created: now,
+          timestamp: now,
+          shared: false,
         };
       } else {
         return note;
@@ -123,7 +125,7 @@ export default function Notes() {
                     {note.book} {note.chapter}:{note.verse}
                   </div>
                   <div className="text-gray-400">
-                    {new Date(note.created).toLocaleDateString()}
+                    {new Date(note.timestamp).toLocaleDateString()}
                   </div>
                 </div>
               </div>
