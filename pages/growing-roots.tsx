@@ -11,6 +11,7 @@ import { getNote, getText } from "@/utils/orchestration";
 import BibleTextDisplay from "@/components/BibleTextDisplay";
 import Countdown, { CountdownApi } from "react-countdown";
 import { isNextDay } from "@/utils/helper";
+import { rootsEmojis } from "@/utils/constants";
 
 export default function Notes() {
   const [hasCheckedStreak, setHasCheckedStreak] = useState<boolean>(false);
@@ -148,6 +149,7 @@ export default function Notes() {
             You&apos;ve already completed a session today. Come back tomorrow to
             continue growing your roots.
           </div>
+          <div>Your current progress: {rootsEmojis[roots.count - 1]}</div>
         </div>
       )}
       {!text && allowed && (
@@ -254,7 +256,7 @@ export default function Notes() {
             &nbsp;growing in {book} {chapter}.
           </div>
           <div className="font-semibold mt-6">Completion rewards:</div>
-          <div>TODO</div>
+          <div>{rootsEmojis[roots.count - 1]}</div>
           <div className="mt-6">You can start another session tomorrow!</div>
         </div>
       )}

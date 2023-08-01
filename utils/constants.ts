@@ -161,3 +161,5 @@ export const textOptions = [
   "#dcaff8",
   "Mauve",
 ];
+
+export const rootsEmojis = ["🪹💧", "🌱", "🌱💧", "🌿", "🌿💧", "🌳", "🍇"];
