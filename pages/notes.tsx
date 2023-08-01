@@ -3,7 +3,6 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import MenuBar from "@/components/MenuBar";
 import { NoteDataType, Page } from "@/utils/types";
-import { Editor } from "@tinymce/tinymce-react";
 import { useAuth } from "@/UserContext";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
@@ -11,6 +10,7 @@ import { getNotes, createOrUpdateNote } from "@/utils/orchestration";
 import { useRouter } from "next/router";
 import NoteEditor from "@/components/NoteEditor";
 import Link from "next/link";
+import CloseIcon from "@/components/icons/CloseIcon";
 
 export default function Notes() {
   const [notes, setNotes] = useState<NoteDataType[]>([]);
@@ -87,6 +87,12 @@ export default function Notes() {
     <PageLayout menuBar={<MenuBar currentPage={Page.NOTES} />}>
       {openNote && (
         <div className="z-[100] absolute flex flex-col justify-end w-screen h-screen bg-white">
+          <div
+            className="absolute top-6 right-6 cursor-pointer"
+            onClick={() => setOpenNote(undefined)}
+          >
+            <CloseIcon className="fill-black" />
+          </div>
           <NoteEditor
             book={openNote.book}
             chapter={openNote.chapter}
@@ -101,10 +107,10 @@ export default function Notes() {
         </div>
       )}
       <div className="p-2 pb-20 mt-7">
-        <div className="m-4 flex flex-wrap gap-4 justify-around">
+        <div className="m-4 gap-4 justify-around">
           {notes.map((note, index) => {
             return (
-              <div className="w-[175px] flex flex-col" key={index}>
+              <div className="w-full flex flex-col" key={index}>
                 <div
                   className="flex flex-col gap-2 p-4 border border-black mb-2 h-full cursor-pointer"
                   dangerouslySetInnerHTML={{ __html: note.note }}
