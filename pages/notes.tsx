@@ -10,6 +10,7 @@ import PageLayout from "@/components/PageLayout";
 import { getNotes, createOrUpdateNote } from "@/utils/orchestration";
 import { useRouter } from "next/router";
 import NoteEditor from "@/components/NoteEditor";
+import Link from "next/link";
 
 export default function Notes() {
   const [notes, setNotes] = useState<NoteDataType[]>([]);
@@ -131,6 +132,17 @@ export default function Notes() {
               </div>
             );
           })}
+          {notes.length === 0 && (
+            <div className="h-[80vh] w-full flex flex-col justify-center text-center">
+              <div>
+                No notes created. Click on a verse in the{" "}
+                <Link className="text-slateGray underline" href="/">
+                  Bible
+                </Link>{" "}
+                tab to create a note.
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </PageLayout>

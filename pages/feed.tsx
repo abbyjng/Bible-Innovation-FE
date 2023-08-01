@@ -14,6 +14,7 @@ import { getFeed, getUser, searchFriends } from "@/utils/orchestration";
 import SearchIcon from "@/components/icons/SearchIcon";
 import CloseIcon from "@/components/icons/CloseIcon";
 import LoadingIcon from "@/components/icons/LoadingIcon";
+import Link from "next/link";
 
 export default function Feed() {
   const [posts, setPosts] = useState<PostType[]>();
@@ -237,6 +238,20 @@ export default function Feed() {
                   </div>
                 );
               })}
+            {posts && posts.length === 0 && (
+              <div className="h-[80vh] w-full flex flex-col justify-center text-center">
+                <div>
+                  No posts found.{" "}
+                  <span
+                    onClick={() => setSearchPageOpen(true)}
+                    className="text-slateGray underline cursor-pointer"
+                  >
+                    Find and follow your friends
+                  </span>{" "}
+                  to see their public notes!
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

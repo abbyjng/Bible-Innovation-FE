@@ -10,7 +10,7 @@ import DefaultImg from "../assets/default.png";
 import Loader from "@/components/Loader";
 import PageLayout from "@/components/PageLayout";
 import { classNames, isNextDay } from "@/utils/helper";
-import { getNotes, getPublicNotes } from "@/utils/orchestration";
+import { getNotes } from "@/utils/orchestration";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
